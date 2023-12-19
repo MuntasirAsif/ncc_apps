@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "900791277185",
+    "project_id": "ncc-apps-47109",
+    "storage_bucket": "ncc-apps-47109.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900791277185:android:7e5afe8c126936bbf7df80",
+        "android_client_info": {
+          "package_name": "com.ncc.ncc_apps"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBk1hVHoQ0UGIvRmxK7DtfWesiSRlxbL20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

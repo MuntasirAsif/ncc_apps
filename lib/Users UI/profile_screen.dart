@@ -1,0 +1,383 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:ncc_apps/Auth_Service/login_screen.dart';
+import 'package:ncc_apps/Users%20UI/Cards/news_View.dart';
+import 'package:ncc_apps/Users%20UI/post_screen.dart';
+import 'package:ncc_apps/Utils/colors.dart';
+import 'dart:io';
+
+import '../Utils/utils.dart';
+
+class ProfileScreen extends StatefulWidget {
+  final bool isAdmin;
+  const ProfileScreen( {Key? key, required this.isAdmin}) : super(key: key);
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late String url;
+  File? image;
+  final picker = ImagePicker();
+
+  DatabaseReference ref = FirebaseDatabase.instanceFor(
+          app: Firebase.app(),
+          databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
+      .ref("post");
+  DatabaseReference ref2 = FirebaseDatabase.instanceFor(
+          app: Firebase.app(),
+          databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
+      .ref("user");
+  @override
+  Widget build(BuildContext context) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final textTheme = Theme.of(context).textTheme;
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text('Profile',
+            style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
+        actions: [
+          PopupMenuButton(
+            icon: const Icon(Icons.more_horiz_outlined),
+            itemBuilder: (
+              context,
+            ) =>
+                [
+              PopupMenuItem(
+                value: 1,
+                child: Text('Sent Request',
+                    style: textTheme.titleSmall!
+                        .copyWith(fontWeight: FontWeight.w400)),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: Text('Settings',
+                    style: textTheme.titleSmall!
+                        .copyWith(fontWeight: FontWeight.w400)),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: InkWell(
+                  onTap: () async {
+                    try {
+                      await FirebaseAuth.instance.signOut();
+                      await Navigator.push(context, MaterialPageRoute(builder: (context)=>const LoginScreen()));
+                      Utils().toastMessages('SignOut');
+                    } catch (error) {
+                      Utils().toastMessages(error.toString());
+                    }
+                  },
+                  child: Text('Long out',
+                      style: textTheme.titleSmall!
+                          .copyWith(fontWeight: FontWeight.w400)),
+                ),
+              ),
+            ],
+          ),
+          Gap(width * 0.03),
+        ],
+      ),
+      body: Container(
+        height: height,
+        width: width,
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage('assets/images/Background.png'),
+                fit: BoxFit.fill)),
+        child: SingleChildScrollView(
+          child: StreamBuilder(
+            stream: ref2.child(uid.toString()).onValue,
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (!snapshot.hasData) {
+                return const CircularProgressIndicator();
+              } else if (snapshot.hasData) {
+                final DataSnapshot data = snapshot.data!.snapshot;
+                final Map<dynamic, dynamic>? map =
+                    data.value as Map<dynamic, dynamic>?;
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: width,
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.015),
+                      decoration: BoxDecoration(
+                          color: grey.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Column(
+                        children: [
+                          Gap(height * 0.02),
+                          Row(
+                            children: [
+                              Stack(
+                                children: [
+                                  Stack(
+                                    alignment: Alignment.bottomRight,
+                                    children: [
+                                      Container(
+                                          width: 118,
+                                          height: 118,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: Colors.black87,
+                                                  width: 3)),
+                                          child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                              child: map?['profileImage']
+                                                          .toString() ==
+                                                      ""
+                                                  ? const Icon(Icons.person)
+                                                  : Image(
+                                                      fit: BoxFit.cover,
+                                                      image: NetworkImage(map?[
+                                                          'profileImage'])))),
+                                      InkWell(
+                                        onTap: () {
+                                          getImageGallery();
+                                        },
+                                        child: const CircleAvatar(
+                                          radius: 15,
+                                          backgroundColor: Colors.black,
+                                          child: Icon(
+                                            Icons.add,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Gap(width * 0.02),
+                              Stack(
+                                children: [
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      minHeight: height * 0.15,
+                                    ),
+                                    child: SizedBox(
+                                      width: width * 0.61,
+                                      child: Container(
+                                        padding: const EdgeInsets.only(
+                                            top: 2, left: 10),
+                                        decoration: BoxDecoration(
+                                            color: grey.withOpacity(0.2),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              map?['userName'],
+                                              style: textTheme.titleMedium!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                            Text('ID :  ${map?['id'] ?? ''}',
+                                                style: textTheme.bodyMedium),
+                                            Text(
+                                                'Department : ${map?['department'] ?? ''}',
+                                                style: textTheme.bodyMedium),
+                                            Text(
+                                                'Position : ${map?['position'] ?? ''}',
+                                                style: textTheme.bodyMedium),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                      right: 4,
+                                      bottom: 4,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            borderRadius:
+                                                BorderRadius.circular(5)),
+                                        child: const Row(
+                                          children: [
+                                            Gap(2),
+                                            Icon(
+                                              Icons.edit,
+                                              size: 15,
+                                            ),
+                                            Gap(2),
+                                            Text("Edit"),
+                                            Gap(2)
+                                          ],
+                                        ),
+                                      )),
+                                ],
+                              )
+                            ],
+                          ),
+                          Gap(height * 0.02),
+                        ],
+                      ),
+                    ),
+                    Gap(height * 0.01),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                      child: Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          PostScreen(isAdmin: widget.isAdmin,)));
+                            },
+                            child: Container(
+                              padding: EdgeInsets.only(
+                                  top: height * 0.015, left: width * 0.02),
+                              height: height * 0.06,
+                              width: width * 0.7,
+                              decoration: BoxDecoration(
+                                  color: transparent,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all()),
+                              child: Text('Write Something',
+                                  style: textTheme.bodyMedium),
+                            ),
+                          ),
+                          Gap(width * 0.02),
+                          Container(
+                            height: height * 0.06,
+                            width: width * 0.22,
+                            decoration: BoxDecoration(
+                                color: black,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Center(
+                                child: Text(
+                              'Post',
+                              style: textTheme.titleMedium!
+                                  .copyWith(color: white.withOpacity(.50)),
+                            )),
+                          )
+                        ],
+                      ),
+                    ),
+                    Gap(height * 0.01),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.02),
+                      child: SizedBox(
+                        height: height * 0.52,
+                        child: FirebaseAnimatedList(
+                            scrollDirection: Axis.vertical,
+                            query: ref,
+                            sort: (DataSnapshot a, DataSnapshot b) {
+                              return b.key!.compareTo(a.key!);
+                            },
+                            itemBuilder: (context, snapshot, animation, index) {
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child:
+                                    snapshot.child('userId').value.toString() ==
+                                            uid
+                                        ? NewsView(
+                                            time: snapshot
+                                                .child('Time')
+                                                .value
+                                                .toString(),
+                                            image: snapshot
+                                                .child('image')
+                                                .value
+                                                .toString(),
+                                            postContent: snapshot
+                                                .child('postContent')
+                                                .value
+                                                .toString(),
+                                            userId: snapshot
+                                                .child('userId')
+                                                .value
+                                                .toString(),
+                                            postKey: snapshot
+                                                .child('postKey')
+                                                .value
+                                                .toString(),
+                                            like: snapshot
+                                                .child('like')
+                                                .children
+                                                .indexed
+                                                .length
+                                                .toString(),
+                                        isLiked: snapshot.child('like').child(uid!).exists,
+                                          )
+                                        : const SizedBox(),
+                              );
+                            }),
+                      ),
+                    )
+                  ],
+                );
+              } else {
+                return const Text('Wrong Something');
+              }
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future getImageGallery() async {
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+    setState(() {
+      if (pickedFile != null) {
+        image = File(pickedFile.path);
+        uploadPic(image!);
+      } else {
+        Utils().toastMessages('No image Selected');
+      }
+    });
+  }
+
+  uploadPic(File image) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
+    FirebaseStorage storage =
+        FirebaseStorage.instanceFor(bucket: 'gs://ncc-apps-47109.appspot.com');
+    Reference storageRef = storage.ref().child("image $uid");
+    UploadTask uploadTask = storageRef.putFile(image);
+    Future.value(uploadTask).then((value) async {
+      url = await storageRef.getDownloadURL();
+      addPost(url);
+    }).catchError((onError) {
+      Utils().toastMessages(onError);
+    });
+  }
+
+  void addPost(String url) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
+    ref2.child(uid!).update({
+      'profileImage': url,
+    }).then((value) {
+      Utils().toastMessages('Profile image updated');
+    }).onError((error, stackTrace) {
+      Utils().toastMessages(error.toString());
+    });
+  }
+}
