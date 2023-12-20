@@ -1,5 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:fan_carousel_image_slider/fan_carousel_image_slider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -23,6 +26,10 @@ class _HomeScreenState extends State<HomeScreen> {
     "assets/images/3.jpg",
     "assets/images/4.jpeg",
   ];
+  DatabaseReference ref = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
+      .ref("Achievement");
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -89,28 +96,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     )),
-                const SizedBox(
-                  child: SingleChildScrollView(
+                SizedBox(
+                  height: height*0.47,
+                  width: width,
+                  child: FirebaseAnimatedList(
+                    query: ref,
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        AchievementView(
-                          title:
-                              'International Contest of Programming Competition organized by NCC',
-                          ranking: '3',
-                        ),
-                        AchievementView(
-                          title:
-                              'International Contest of Programming Competition organized by NCC',
-                          ranking: '3',
-                        ),
-                        AchievementView(
-                          title:
-                              'International Contest of Programming Competition organized by NCC',
-                          ranking: '3',
-                        ),
-                      ],
-                    ),
+                    itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+                      return AchievementView(
+                        title: snapshot.child('title').value.toString(),
+                        ranking: snapshot.child('rank').value.toString(),
+                        image: snapshot.child('image').value.toString(),);
+                    },
                   ),
                 ),
                 Container(

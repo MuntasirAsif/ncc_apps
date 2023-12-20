@@ -36,13 +36,13 @@ class _BottomBarState extends State<BottomBar> {
     final List<Widget> widgetOptins = <Widget>[
       const HomeScreen(),
       NewsFeed(isAdmin: isAdmin),
-      const SegmentScreen(),
+      SegmentScreen(isAdmin: isAdmin),
       ProfileScreen(isAdmin: isAdmin,),
     ];
     final List<Widget> adminWidgetOptins = <Widget>[
       AdminHomeScreen(isAdmin: isAdmin),
       NewsFeed(isAdmin: isAdmin),
-      const SegmentScreen(),
+      SegmentScreen(isAdmin: isAdmin),
       ProfileScreen(isAdmin: isAdmin),
     ];
     final User? user = FirebaseAuth.instance.currentUser;
@@ -53,7 +53,7 @@ class _BottomBarState extends State<BottomBar> {
         stream: ref.child(uid.toString()).onValue,
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if (!snapshot.hasData) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasData) {
             final DataSnapshot data = snapshot.data!.snapshot;
             final Map<dynamic, dynamic>? map =

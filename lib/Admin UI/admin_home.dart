@@ -1,9 +1,10 @@
-import 'package:fan_carousel_image_slider/fan_carousel_image_slider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:ncc_apps/Users%20UI/post_screen.dart';
-
 import '../Users UI/Cards/achevement_view.dart';
 import '../Utils/colors.dart';
 import '../Utils/utils.dart';
@@ -17,13 +18,10 @@ class AdminHomeScreen extends StatefulWidget {
 }
 
 class _AdminHomeScreenState extends State<AdminHomeScreen> {
-  static const List<String> sampleImages = [
-    "assets/images/0.jpg",
-    "assets/images/1.jpg",
-    "assets/images/2.jpg",
-    "assets/images/3.jpg",
-    "assets/images/4.jpeg",
-  ];
+  DatabaseReference ref = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
+      .ref("Achievement");
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -71,14 +69,6 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FanCarouselImageSlider(
-                  sliderHeight: height * 0.4,
-                  imagesLink: sampleImages,
-                  isAssets: true,
-                  autoPlay: true,
-                  isClickable: true,
-                ),
-                Gap(height * 0.02),
                 Container(
                     padding: EdgeInsets.symmetric(horizontal: width * 0.03),
                     child: Row(
@@ -90,14 +80,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                               color: black, fontWeight: FontWeight.bold),
                         ),
                         InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>PostScreen(isAdmin: widget.isAdmin)));
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        PostScreen(isAdmin: widget.isAdmin)));
                           },
                           child: Container(
-                            height: height*0.04,
+                              height: height * 0.04,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(),
                                 color: bgGreen,
                               ),
                               child: Row(
@@ -114,28 +108,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         ),
                       ],
                     )),
-                const SizedBox(
-                  child: SingleChildScrollView(
+                SizedBox(
+                  height: height*0.47,
+                  width: width,
+                  child: FirebaseAnimatedList(
+                    query: ref,
                     scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        AchievementView(
-                          title:
-                              'International Contest of Programming Competition organized by NCC',
-                          ranking: '3',
-                        ),
-                        AchievementView(
-                          title:
-                              'International Contest of Programming Competition organized by NCC',
-                          ranking: '3',
-                        ),
-                        AchievementView(
-                          title:
-                              'International Contest of Programming Competition organized by NCC',
-                          ranking: '3',
-                        ),
-                      ],
-                    ),
+                    itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
+                      return AchievementView(
+                        title: snapshot.child('title').value.toString(),
+                        ranking: snapshot.child('rank').value.toString(),
+                        image: snapshot.child('image').value.toString(),);
+                    },
                   ),
                 ),
               ],

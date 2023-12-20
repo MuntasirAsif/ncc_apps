@@ -46,25 +46,33 @@ class _NewsFeedState extends State<NewsFeed> {
             image: DecorationImage(
                 image: AssetImage('assets/images/Background.png'),
                 fit: BoxFit.fill)),
-        child: FirebaseAnimatedList(
-            scrollDirection: Axis.vertical,
-            query: ref,
-            sort: (DataSnapshot a, DataSnapshot b) {
-              return b.key!.compareTo(a.key!);
-            },
-            itemBuilder: (context, snapshot, animation, index) {
-              return SingleChildScrollView(
-                child: NewsView(
-                  time: snapshot.child('Time').value.toString(),
-                  image: snapshot.child('image').value.toString(),
-                  postContent: snapshot.child('postContent').value.toString(),
-                  userId: snapshot.child('userId').value.toString(),
-                  postKey: snapshot.child('postKey').value.toString(),
-                  like: snapshot.child('like').children.indexed.length.toString(),
-                  isLiked: snapshot.child('like').child(uid!).exists,
-                ),
-              );
-            }),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: height,
+                width: width,
+                child: FirebaseAnimatedList(
+                    scrollDirection: Axis.vertical,
+                    query: ref,
+                    sort: (DataSnapshot a, DataSnapshot b) {
+                      return b.key!.compareTo(a.key!);
+                    },
+                    itemBuilder: (context, snapshot, animation, index) {
+                      return NewsView(
+                        time: snapshot.child('Time').value.toString(),
+                        image: snapshot.child('image').value.toString(),
+                        postContent: snapshot.child('postContent').value.toString(),
+                        userId: snapshot.child('userId').value.toString(),
+                        postKey: snapshot.child('postKey').value.toString(),
+                        like: snapshot.child('like').children.indexed.length.toString(),
+                        isLiked: snapshot.child('like').child(uid!).exists,
+                      );
+                    }),
+              ),
+            ],
+          ),
+        ),
       ),
       floatingActionButton: InkWell(
         onTap: () {
@@ -72,12 +80,12 @@ class _NewsFeedState extends State<NewsFeed> {
               MaterialPageRoute(builder: (context) => PostScreen(isAdmin: widget.isAdmin,)));
         },
         child: Container(
-          height: height * 0.06,
+          height: height * 0.05,
           width: width * 0.30,
           decoration: BoxDecoration(
-              color: bgGreen,
+              color: bgGreen.withOpacity(0.7),
               border: Border.all(),
-              borderRadius: BorderRadius.circular(20)),
+              borderRadius: BorderRadius.circular(10)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

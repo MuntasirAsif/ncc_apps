@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:ncc_apps/Users%20UI/Cards/commentScreen.dart';
 import 'package:ncc_apps/Utils/colors.dart';
 import 'package:readmore/readmore.dart';
 
@@ -36,6 +37,7 @@ class _NewsViewState extends State<NewsView> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final textTheme = Theme.of(context).textTheme;
     DatabaseReference ref = FirebaseDatabase.instanceFor(
             app: Firebase.app(),
             databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
@@ -127,9 +129,9 @@ class _NewsViewState extends State<NewsView> {
                             final User? user =
                                 FirebaseAuth.instance.currentUser;
                             final uid = user?.uid;
-                            if(widget.isLiked){
+                            if (widget.isLiked) {
                               ref2.child('like').child(uid!).remove();
-                            }else{
+                            } else {
                               ref2.child('like').update({
                                 uid.toString(): uid,
                               }).then((value) {
@@ -142,14 +144,26 @@ class _NewsViewState extends State<NewsView> {
                           child: SizedBox(
                               child: Row(
                             children: [
-                              widget.isLiked? Icon(Icons.thumb_up_alt_sharp,color: deepGreen,):Icon(Icons.thumb_up_alt_sharp,color: black,),
+                              widget.isLiked
+                                  ? Icon(
+                                      Icons.thumb_up_alt_sharp,
+                                      color: deepGreen,
+                                    )
+                                  : Icon(
+                                      Icons.thumb_up_alt_sharp,
+                                      color: black,
+                                    ),
                               Gap(width * 0.03),
                               Text(widget.like.toString()),
                             ],
                           )),
                         ),
                         const Gap(2),
-                        const Icon(Icons.mode_comment_rounded),
+                        InkWell(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>CommentScreen(postKey: widget.postKey)));
+                            },
+                            child: const Icon(Icons.mode_comment)),
                       ],
                     ),
                     Gap(height * 0.01),

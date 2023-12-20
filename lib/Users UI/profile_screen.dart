@@ -11,12 +11,11 @@ import 'package:ncc_apps/Users%20UI/Cards/news_View.dart';
 import 'package:ncc_apps/Users%20UI/post_screen.dart';
 import 'package:ncc_apps/Utils/colors.dart';
 import 'dart:io';
-
 import '../Utils/utils.dart';
 
 class ProfileScreen extends StatefulWidget {
   final bool isAdmin;
-  const ProfileScreen( {Key? key, required this.isAdmin}) : super(key: key);
+  const ProfileScreen({Key? key, required this.isAdmin}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -26,6 +25,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String url;
   File? image;
   final picker = ImagePicker();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController idController = TextEditingController();
+  TextEditingController departmentController = TextEditingController();
+  TextEditingController positionController = TextEditingController();
 
   DatabaseReference ref = FirebaseDatabase.instanceFor(
           app: Firebase.app(),
@@ -50,19 +53,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           PopupMenuButton(
             icon: const Icon(Icons.more_horiz_outlined),
-            itemBuilder: (
-              context,
-            ) =>
-                [
+            itemBuilder: (context) => [
               PopupMenuItem(
                 value: 1,
-                child: Text('Sent Request',
+                child: Text('NCC Membership',
                     style: textTheme.titleSmall!
                         .copyWith(fontWeight: FontWeight.w400)),
               ),
               PopupMenuItem(
                 value: 1,
-                child: Text('Settings',
+                child: Text('Change password',
                     style: textTheme.titleSmall!
                         .copyWith(fontWeight: FontWeight.w400)),
               ),
@@ -72,7 +72,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () async {
                     try {
                       await FirebaseAuth.instance.signOut();
-                      await Navigator.push(context, MaterialPageRoute(builder: (context)=>const LoginScreen()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginScreen()));
                       Utils().toastMessages('SignOut');
                     } catch (error) {
                       Utils().toastMessages(error.toString());
@@ -105,6 +108,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 final DataSnapshot data = snapshot.data!.snapshot;
                 final Map<dynamic, dynamic>? map =
                     data.value as Map<dynamic, dynamic>?;
+                nameController.text = map?['userName'];
+                idController.text = map?['id'];
+                departmentController.text = map?['department'];
+                positionController.text = map?['position'];
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,23 +213,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   Positioned(
                                       right: 4,
                                       bottom: 4,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: const Row(
-                                          children: [
-                                            Gap(2),
-                                            Icon(
-                                              Icons.edit,
-                                              size: 15,
-                                            ),
-                                            Gap(2),
-                                            Text("Edit"),
-                                            Gap(2)
-                                          ],
+                                      child: InkWell(
+                                        onTap: () {
+                                          eidDialog();
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: const Row(
+                                            children: [
+                                              Gap(2),
+                                              Icon(
+                                                Icons.edit,
+                                                size: 15,
+                                              ),
+                                              Gap(2),
+                                              Text("Edit"),
+                                              Gap(2)
+                                            ],
+                                          ),
                                         ),
                                       )),
                                 ],
@@ -243,8 +255,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          PostScreen(isAdmin: widget.isAdmin,)));
+                                      builder: (context) => PostScreen(
+                                            isAdmin: widget.isAdmin,
+                                          )));
                             },
                             child: Container(
                               padding: EdgeInsets.only(
@@ -320,7 +333,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 .indexed
                                                 .length
                                                 .toString(),
-                                        isLiked: snapshot.child('like').child(uid!).exists,
+                                            isLiked: snapshot
+                                                .child('like')
+                                                .child(uid!)
+                                                .exists,
                                           )
                                         : const SizedBox(),
                               );
@@ -337,6 +353,129 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  eidDialog() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          final height = MediaQuery.of(context).size.height;
+          final width = MediaQuery.of(context).size.width;
+          final textTheme = Theme.of(context).textTheme;
+          return AlertDialog(
+            backgroundColor: white,
+            title: const Text('Edit profile'),
+            content: SizedBox(
+              height: height * 0.4,
+              width: width * 0.8,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      hintText: 'Name',
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                  ),
+                  Gap(height * 0.02),
+                  TextFormField(
+                    controller: idController,
+                    decoration: InputDecoration(
+                      labelText: 'ID',
+                      hintText: 'ID',
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                  ),
+                  Gap(height * 0.02),
+                  widget.isAdmin
+                      ? TextFormField(
+                          controller: positionController,
+                          decoration: InputDecoration(
+                            labelText: 'Position',
+                            hintText: 'Position',
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: black),
+                                borderRadius: BorderRadius.circular(20)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: black),
+                                borderRadius: BorderRadius.circular(20)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: black),
+                                borderRadius: BorderRadius.circular(20)),
+                            disabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: black),
+                                borderRadius: BorderRadius.circular(20)),
+                          ),
+                        )
+                      : const SizedBox(),
+                ],
+              ),
+            ),
+            actions: [
+              InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: textTheme.titleSmall!.copyWith(color: red),
+                  )),
+              InkWell(
+                onTap: () {
+                  updateProfile();
+                },
+                child: Container(
+                  height: height * 0.05,
+                  width: width * 0.2,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15), color: black),
+                  child: Center(
+                      child: Text(
+                    'Update',
+                    style: textTheme.titleMedium!.copyWith(color: white),
+                  )),
+                ),
+              )
+            ],
+          );
+        });
+  }
+
+  updateProfile() {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
+    ref2.child(uid.toString()).update({
+      'userName': nameController.text.toString(),
+      'id': idController.text.toString()
+    }).then((value) {
+      Navigator.pop(context);
+      Utils().toastMessages('Updated');
+    }).onError((e, stackTrace) {
+      Utils().toastMessages(e.toString());
+    });
   }
 
   Future getImageGallery() async {

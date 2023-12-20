@@ -5,7 +5,8 @@ import 'package:ncc_apps/Utils/colors.dart';
 class AchievementView extends StatelessWidget {
   final String title;
   final String ranking;
-  const AchievementView({Key? key, required this.title, required this.ranking,}) : super(key: key);
+  final String image;
+  const AchievementView({Key? key, required this.title, required this.ranking, required this.image,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class AchievementView extends StatelessWidget {
               decoration: BoxDecoration(
                 color: bgGreen,
                 borderRadius: BorderRadius.circular(20),
-                image: const DecorationImage(image: NetworkImage('https://www.topcoder.com/wp-content/media/2017/05/31031670211_47d7e8de58_k-1024x685.jpg',),fit: BoxFit.cover,)
+                image: DecorationImage(image: NetworkImage(image),fit: BoxFit.cover,)
               ),
             ),
             Row(
