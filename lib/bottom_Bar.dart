@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ncc_apps/Users%20UI/profile_screen.dart';
 import 'package:ncc_apps/Users%20UI/segment_screen.dart';
@@ -47,49 +48,55 @@ class _BottomBarState extends State<BottomBar> {
     ];
     final User? user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
-    return Scaffold(
-      //backgroundColor: Colors.black54,
-      body: StreamBuilder(
-        stream: ref.child(uid.toString()).onValue,
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasData) {
-            final DataSnapshot data = snapshot.data!.snapshot;
-            final Map<dynamic, dynamic>? map =
-            data.value as Map<dynamic, dynamic>?;
-            isAdmin = map?['userType']=='Admin';
-            return !isAdmin? Center(
-              child: widgetOptins[_selectedIndex]): Center(child: adminWidgetOptins[_selectedIndex]);
-        }else {
-            return const Text('Wrong Something');
-          }
-        },
-        ),
-      bottomNavigationBar:
-             BottomNavigationBar(
-                currentIndex: _selectedIndex,
-                onTap: _onItemTapped,
-                iconSize: 27,
-                showSelectedLabels: true,
-                showUnselectedLabels: false,
-                selectedItemColor: deepGreen,
-                unselectedItemColor: black,
-                type: BottomNavigationBarType.fixed,
-                backgroundColor: white,
-                items: const [
-                  BottomNavigationBarItem(
-                      icon: FaIcon(FontAwesomeIcons.house), label: 'Home'),
-                  BottomNavigationBarItem(
-                      icon: FaIcon(FontAwesomeIcons.newspaper),
-                      label: 'News Feed'),
-                  BottomNavigationBarItem(
-                      icon: FaIcon(FontAwesomeIcons.gripfire),
-                      label: 'Segment'),
-                  BottomNavigationBarItem(
-                      icon: FaIcon(FontAwesomeIcons.user), label: 'Profile'),
-                ],
-              )
+    return WillPopScope.new(
+      onWillPop: () async {
+        SystemNavigator.pop();
+        return true;
+      },
+      child: Scaffold(
+        //backgroundColor: Colors.black54,
+        body: StreamBuilder(
+          stream: ref.child(uid.toString()).onValue,
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasData) {
+              final DataSnapshot data = snapshot.data!.snapshot;
+              final Map<dynamic, dynamic>? map =
+              data.value as Map<dynamic, dynamic>?;
+              isAdmin = map?['userType']=='Admin';
+              return !isAdmin? Center(
+                child: widgetOptins[_selectedIndex]): Center(child: adminWidgetOptins[_selectedIndex]);
+          }else {
+              return const Text('Wrong Something');
+            }
+          },
+          ),
+        bottomNavigationBar:
+               BottomNavigationBar(
+                  currentIndex: _selectedIndex,
+                  onTap: _onItemTapped,
+                  iconSize: 27,
+                  showSelectedLabels: true,
+                  showUnselectedLabels: false,
+                  selectedItemColor: deepGreen,
+                  unselectedItemColor: black,
+                  type: BottomNavigationBarType.fixed,
+                  backgroundColor: white,
+                  items: const [
+                    BottomNavigationBarItem(
+                        icon: FaIcon(FontAwesomeIcons.house), label: 'Home'),
+                    BottomNavigationBarItem(
+                        icon: FaIcon(FontAwesomeIcons.newspaper),
+                        label: 'News Feed'),
+                    BottomNavigationBarItem(
+                        icon: FaIcon(FontAwesomeIcons.gripfire),
+                        label: 'Segment'),
+                    BottomNavigationBarItem(
+                        icon: FaIcon(FontAwesomeIcons.user), label: 'Profile'),
+                  ],
+                )
+      ),
     );
   }
 }

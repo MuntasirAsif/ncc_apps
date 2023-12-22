@@ -91,7 +91,6 @@ class _SegmentViewState extends State<SegmentView> {
                   height: height * 0.3,
                   width: width,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
                       image: DecorationImage(
                           image: AssetImage(widget.photo),
                           fit: BoxFit.cover))),

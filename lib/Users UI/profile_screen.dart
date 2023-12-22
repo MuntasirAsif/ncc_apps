@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ncc_apps/Auth_Service/login_screen.dart';
+import 'package:ncc_apps/Auth_Service/reset_password.dart';
 import 'package:ncc_apps/Users%20UI/Cards/news_View.dart';
 import 'package:ncc_apps/Users%20UI/post_screen.dart';
 import 'package:ncc_apps/Utils/colors.dart';
@@ -56,34 +57,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 1,
-                child: Text('NCC Membership',
-                    style: textTheme.titleSmall!
-                        .copyWith(fontWeight: FontWeight.w400)),
-              ),
-              PopupMenuItem(
-                value: 1,
-                child: Text('Change password',
-                    style: textTheme.titleSmall!
-                        .copyWith(fontWeight: FontWeight.w400)),
+                child: SizedBox(
+                  height: height*0.04,
+                  width: width*0.3,
+                  child: Text('NCC Membership',
+                      style: textTheme.titleSmall!
+                          .copyWith(fontWeight: FontWeight.w400)),
+                ),
               ),
               PopupMenuItem(
                 value: 1,
                 child: InkWell(
-                  onTap: () async {
-                    try {
-                      await FirebaseAuth.instance.signOut();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginScreen()));
-                      Utils().toastMessages('SignOut');
-                    } catch (error) {
-                      Utils().toastMessages(error.toString());
-                    }
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const ResetPassword()));
                   },
-                  child: Text('Long out',
-                      style: textTheme.titleSmall!
-                          .copyWith(fontWeight: FontWeight.w400)),
+                  child: SizedBox(
+                    height: height*0.04,
+                    width: width*0.3,
+                    child: Text('Change password',
+                        style: textTheme.titleSmall!
+                            .copyWith(fontWeight: FontWeight.w400)),
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: InkWell(
+                  onTap: (){
+                    logOut();
+                  },
+                  child: SizedBox(
+                    height: height*0.04,
+                    width: width*0.3,
+                    child: Text('Long out',
+                        style: textTheme.titleSmall!
+                            .copyWith(fontWeight: FontWeight.w400)),
+                  ),
                 ),
               ),
             ],
@@ -462,6 +471,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           );
         });
+  }
+  void logOut()async{
+    try {
+      await FirebaseAuth.instance.signOut().then((value){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const LoginScreen()));
+        Utils().toastMessages('SignOut');
+      });
+    } catch (error) {
+      Utils().toastMessages(error.toString());
+    }
   }
 
   updateProfile() {

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:ncc_apps/Users%20UI/post_screen.dart';
@@ -85,7 +86,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        PostScreen(isAdmin: widget.isAdmin)));
+                                        const PostScreen(isAdmin: true)));
                           },
                           child: Container(
                               height: height * 0.04,

@@ -161,7 +161,9 @@ class _NewsViewState extends State<NewsView> {
                         const Gap(2),
                         InkWell(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>CommentScreen(postKey: widget.postKey)));
+                              showBottomSheet(context: context, builder: (BuildContext context){
+                                return CommentScreen(postKey: widget.postKey);
+                              });
                             },
                             child: const Icon(Icons.mode_comment)),
                       ],
