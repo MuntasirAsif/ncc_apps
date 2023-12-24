@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import '../Segment/segment_view.dart';
+import '../Full View/segment_view.dart';
 import '../Utils/colors.dart';
 
 class SegmentScreen extends StatefulWidget {

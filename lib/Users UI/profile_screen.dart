@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ncc_apps/Auth_Service/login_screen.dart';
 import 'package:ncc_apps/Auth_Service/reset_password.dart';
 import 'package:ncc_apps/Users%20UI/Cards/news_View.dart';
+import 'package:ncc_apps/Users%20UI/NCC_membership_request.dart';
 import 'package:ncc_apps/Users%20UI/post_screen.dart';
 import 'package:ncc_apps/Utils/colors.dart';
 import 'dart:io';
@@ -23,6 +24,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late String photo;
   late String url;
   File? image;
   final picker = ImagePicker();
@@ -57,12 +59,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             itemBuilder: (context) => [
               PopupMenuItem(
                 value: 1,
-                child: SizedBox(
-                  height: height*0.04,
-                  width: width*0.3,
-                  child: Text('NCC Membership',
-                      style: textTheme.titleSmall!
-                          .copyWith(fontWeight: FontWeight.w400)),
+                child: InkWell(
+                  onTap:(){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const NCCMemberRequest(photo: '',)));
+                  },
+                  child: SizedBox(
+                    height: height*0.04,
+                    width: width*0.3,
+                    child: Text('NCC Membership',
+                        style: textTheme.titleSmall!
+                            .copyWith(fontWeight: FontWeight.w400)),
+                  ),
                 ),
               ),
               PopupMenuItem(

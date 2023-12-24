@@ -112,7 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         return AchievementView(
                           title: snapshot.child('title').value.toString(),
                           ranking: snapshot.child('rank').value.toString(),
-                          image: snapshot.child('image').value.toString(),);
+                          image: snapshot.child('image').value.toString(),
+                          postContent: snapshot.child('postContent').value.toString(),);
                       },
                     ),
                   ),

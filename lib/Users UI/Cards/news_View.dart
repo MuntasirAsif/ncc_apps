@@ -147,7 +147,7 @@ class _NewsViewState extends State<NewsView> {
                               widget.isLiked
                                   ? Icon(
                                       Icons.thumb_up_alt_sharp,
-                                      color: deepGreen,
+                                      color: green,
                                     )
                                   : Icon(
                                       Icons.thumb_up_alt_sharp,
