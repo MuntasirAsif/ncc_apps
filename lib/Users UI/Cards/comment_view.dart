@@ -50,7 +50,7 @@ class _CommentViewState extends State<CommentView> {
                   return ListTile(
                     leading: Container(
                       width: width * 0.1,
-                      height: height * 0.04,
+                      height: width * 0.1,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.black87, width: 3)),

@@ -36,6 +36,9 @@ class _CommentScreenState extends State<CommentScreen> {
         height: height * 0.6,
         decoration: BoxDecoration(
           color: Colors.transparent,
+            image: const DecorationImage(
+                image: AssetImage('assets/images/Background.png'),
+                fit: BoxFit.fill),
             border: Border.all(),
             borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(20), topLeft: Radius.circular(20))),

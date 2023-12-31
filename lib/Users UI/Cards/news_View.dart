@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:ncc_apps/Users%20UI/Cards/commentScreen.dart';
+import 'package:ncc_apps/Users%20UI/profile_screen.dart';
 import 'package:ncc_apps/Utils/colors.dart';
 import 'package:readmore/readmore.dart';
 
@@ -11,6 +12,7 @@ import '../../Utils/utils.dart';
 
 class NewsView extends StatefulWidget {
   final String time;
+  final bool isAdmin;
   final String image;
   final String postContent;
   final String userId;
@@ -26,6 +28,7 @@ class NewsView extends StatefulWidget {
     required this.postKey,
     required this.like,
     required this.isLiked,
+    required this.isAdmin,
   }) : super(key: key);
 
   @override
@@ -35,9 +38,12 @@ class NewsView extends StatefulWidget {
 class _NewsViewState extends State<NewsView> {
   @override
   Widget build(BuildContext context) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final textTheme = Theme.of(context).textTheme;
+    bool isAction = (widget.userId == uid);
     DatabaseReference ref = FirebaseDatabase.instanceFor(
             app: Firebase.app(),
             databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
@@ -70,24 +76,61 @@ class _NewsViewState extends State<NewsView> {
                   final DataSnapshot data = snapshot.data!.snapshot;
                   final Map<dynamic, dynamic>? map =
                       data.value as Map<dynamic, dynamic>?;
-                  return ListTile(
-                    leading: Container(
-                      width: width * 0.13,
-                      height: height * 0.07,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.black87, width: 3)),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(100),
-                          child: map?['profileImage'].toString() == ""
-                              ? const Icon(Icons.person)
-                              : Image(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(map?['profileImage']))),
-                    ),
-                    title: Text(map?['userName']),
-                    subtitle: Text(
-                        '${widget.time.substring(0, 11)} at ${widget.time.substring(11, 16)}'),
+                  if (widget.isAdmin == true) {
+                    isAction = true;
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: width * 0.8,
+                        child: InkWell(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileScreen(isAdmin: widget.isAdmin, uid: widget.userId)));
+                          },
+                          child: ListTile(
+                            leading: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color: Colors.black87, width: 3)),
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: map?['profileImage'].toString() == ""
+                                      ? const Icon(Icons.person)
+                                      : Image(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(
+                                              map?['profileImage']))),
+                            ),
+                            title: Text(map?['userName']),
+                            subtitle: Text(
+                                '${widget.time.substring(0, 11)} at ${widget.time.substring(11, 16)}'),
+                          ),
+                        ),
+                      ),
+                      isAction
+                          ? PopupMenuButton(
+                              icon: const Icon(Icons.more_horiz_outlined),
+                              itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  value: 1,
+                                  child: InkWell(
+                                    onTap: () {
+                                      showDeleteDialog(ref2);
+                                    },
+                                    child: Text('Delete',
+                                        style: textTheme.titleSmall!.copyWith(
+                                            fontWeight: FontWeight.w400)),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : const SizedBox(),
+                    ],
                   );
                 } else {
                   return const Text('Wrong Something');
@@ -161,9 +204,12 @@ class _NewsViewState extends State<NewsView> {
                         const Gap(2),
                         InkWell(
                             onTap: () {
-                              showBottomSheet(context: context, builder: (BuildContext context){
-                                return CommentScreen(postKey: widget.postKey);
-                              });
+                              showBottomSheet(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return CommentScreen(
+                                        postKey: widget.postKey);
+                                  });
                             },
                             child: const Icon(Icons.mode_comment)),
                       ],
@@ -177,5 +223,39 @@ class _NewsViewState extends State<NewsView> {
         ),
       ),
     );
+  }
+
+  showDeleteDialog(DatabaseReference ref2) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Row(
+              children: [
+                Icon(
+                  Icons.delete,
+                ),
+                Gap(10),
+                SizedBox(child: Text('Delete Post'))
+              ],
+            ),
+            content: const Text('Are sure?'),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                    ref2.remove();
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  child: const Text('delete')),
+            ],
+          );
+        });
   }
 }

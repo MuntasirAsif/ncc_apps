@@ -17,7 +17,8 @@ import '../Utils/utils.dart';
 
 class ProfileScreen extends StatefulWidget {
   final bool isAdmin;
-  const ProfileScreen({Key? key, required this.isAdmin}) : super(key: key);
+  final String uid;
+  const ProfileScreen({Key? key, required this.isAdmin, required this.uid}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -44,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
-    final uid = user?.uid;
+    final uId = user?.uid;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final textTheme = Theme.of(context).textTheme;
@@ -54,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text('Profile',
             style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
         actions: [
-          PopupMenuButton(
+          uId.toString()==widget.uid?PopupMenuButton(
             icon: const Icon(Icons.more_horiz_outlined),
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -115,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ],
-          ),
+          ):const SizedBox(),
           Gap(width * 0.03),
         ],
       ),
@@ -128,7 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 fit: BoxFit.fill)),
         child: SingleChildScrollView(
           child: StreamBuilder(
-            stream: ref2.child(uid.toString()).onValue,
+            stream: ref2.child(widget.uid.toString()).onValue,
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (!snapshot.hasData) {
                 return const CircularProgressIndicator();
@@ -233,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                   ),
-                                  Positioned(
+                                  widget.isAdmin||(uId.toString()==widget.uid)? Positioned(
                                       right: 4,
                                       bottom: 4,
                                       child: InkWell(
@@ -259,7 +260,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             ],
                                           ),
                                         ),
-                                      )),
+                                      )):const SizedBox(),
                                 ],
                               )
                             ],
@@ -328,7 +329,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 scrollDirection: Axis.vertical,
                                 child:
                                     snapshot.child('userId').value.toString() ==
-                                            uid
+                                            widget.uid
                                         ? NewsView(
                                             time: snapshot
                                                 .child('Time')
@@ -358,8 +359,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 .toString(),
                                             isLiked: snapshot
                                                 .child('like')
-                                                .child(uid!)
-                                                .exists,
+                                                .child(widget.uid)
+                                                .exists, isAdmin: widget.isAdmin,
                                           )
                                         : const SizedBox(),
                               );

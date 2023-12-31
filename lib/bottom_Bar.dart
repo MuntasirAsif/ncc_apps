@@ -33,21 +33,22 @@ class _BottomBarState extends State<BottomBar> {
           databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
       .ref("user");
   @override
+
   Widget build(BuildContext context) {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
     final List<Widget> widgetOptins = <Widget>[
       const HomeScreen(),
       NewsFeed(isAdmin: isAdmin),
       SegmentScreen(isAdmin: isAdmin),
-      ProfileScreen(isAdmin: isAdmin,),
+      ProfileScreen(isAdmin: isAdmin, uid: uid.toString(),),
     ];
     final List<Widget> adminWidgetOptins = <Widget>[
       AdminHomeScreen(isAdmin: isAdmin),
       NewsFeed(isAdmin: isAdmin),
       SegmentScreen(isAdmin: isAdmin),
-      ProfileScreen(isAdmin: isAdmin),
+      ProfileScreen(isAdmin: isAdmin, uid: uid.toString(),),
     ];
-    final User? user = FirebaseAuth.instance.currentUser;
-    final uid = user?.uid;
     return PopScope(
       canPop: false, // prevent back
       onPopInvoked: (_) async {

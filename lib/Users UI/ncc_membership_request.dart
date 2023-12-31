@@ -82,1041 +82,1043 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: width * 0.03),
           child: SingleChildScrollView(
-            child: StreamBuilder(
-              stream: ref.child(uid.toString()).onValue,
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasData) {
-                  final DataSnapshot data = snapshot.data!.snapshot;
-                  final Map<dynamic, dynamic>? map =
-                      data.value as Map<dynamic, dynamic>?;
-                  isEditable = ((map?['dept'] == '') || (map?['dept'] == null));
-                  if (isEditable) {
-                    return Column(
-                      children: [
-                        Gap(height * 0.01),
-                        Center(
-                          child: Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              Container(
-                                height: height * 0.145,
-                                width: height * 0.145,
-                                decoration: BoxDecoration(
-                                    color: white,
-                                    border: Border.all(width: 2),
-                                    image: DecorationImage(
-                                        image: NetworkImage(widget.photo),
-                                        fit: BoxFit.cover),
-                                    borderRadius: BorderRadius.circular(100)),
-                                child: widget.photo == ''
-                                    ? const Icon(
-                                        Icons.person,
-                                        size: 20,
-                                      )
-                                    : const SizedBox(),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  getImageGallery();
-                                },
-                                child: CircleAvatar(
-                                    radius: 18,
-                                    backgroundColor: black.withOpacity(0.7),
-                                    child: Icon(
-                                      Icons.camera_alt,
-                                      color: white,
-                                    )),
-                              )
-                            ],
-                          ),
-                        ),
-                        Gap(height * 0.02),
-                        Text(
-                          '* To get NCC membership fill-up the form & submit',
-                          style: textTheme.bodyMedium,
-                        ),
-                        Form(
-                            key: _formKey,
-                            child: Column(
-                              children: [
-                                Gap(height * 0.01),
-                                TextFormField(
-                                  controller: nameController,
-                                  decoration: InputDecoration(
-                                    hintText: 'Name',
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                ),
-                                Gap(height * 0.01),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      height: height * 0.07,
-                                      width: width * 0.45,
-                                      child: TextFormField(
-                                        controller: ageController,
-                                        keyboardType: TextInputType.number,
-                                        decoration: InputDecoration(
-                                          hintText: 'Age',
-                                          border: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          disabledBorder: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: width * .03,
-                                      ),
-                                      height: height * 0.07,
-                                      width: width * 0.45,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(),
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: width * 0.30,
-                                            child: Text(gender),
-                                          ),
-                                          SizedBox(
-                                            width: width * 0.08,
-                                            child: PopupMenuButton(
-                                              icon: const Icon(
-                                                  Icons.arrow_drop_down_sharp),
-                                              itemBuilder: (context) => [
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        gender = 'Male';
-                                                        Navigator.pop(context);
-                                                      });
-                                                    },
-                                                    child: SizedBox(
-                                                      height: height * 0.04,
-                                                      width: width * 0.2,
-                                                      child: Text('Male',
-                                                          style: textTheme
-                                                              .titleSmall!
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                    ),
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        gender = 'Female';
-                                                        Navigator.pop(context);
-                                                      });
-                                                    },
-                                                    child: SizedBox(
-                                                      height: height * 0.04,
-                                                      width: width * 0.2,
-                                                      child: Text('Female',
-                                                          style: textTheme
-                                                              .titleSmall!
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Gap(height * 0.01),
-                                TextFormField(
-                                  controller: mailController,
-                                  decoration: InputDecoration(
-                                    hintText: 'E-mail',
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                        BorderRadius.circular(10)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                        BorderRadius.circular(10)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                        BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                        BorderRadius.circular(10)),
-                                  ),
-                                ),
-                                Gap(height * 0.01),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      height: height * 0.07,
-                                      width: width * 0.2,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(),
-                                          borderRadius: const BorderRadius.only(
-                                              topLeft: Radius.circular(10),
-                                              bottomLeft: Radius.circular(10))),
-                                      child: const Center(child: Text('+880')),
-                                    ),
-                                    SizedBox(
-                                      height: height * 0.07,
-                                      width: width * 0.74,
-                                      child: TextFormField(
-                                        controller: phoneNumberController,
-                                        keyboardType: TextInputType.number,
-                                        decoration: InputDecoration(
-                                          hintText: 'Number',
-                                          border: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                      topRight:
-                                                          Radius.circular(10),
-                                                      bottomRight:
-                                                          Radius.circular(10))),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                      topRight:
-                                                          Radius.circular(10),
-                                                      bottomRight:
-                                                          Radius.circular(10))),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                      topRight:
-                                                          Radius.circular(10),
-                                                      bottomRight:
-                                                          Radius.circular(10))),
-                                          disabledBorder: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                      topRight:
-                                                          Radius.circular(10),
-                                                      bottomRight:
-                                                          Radius.circular(10))),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Gap(height * 0.01),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: width * .03,
-                                      vertical: height * 0.02),
-                                  height: height * 0.07,
-                                  width: width * 0.95,
-                                  decoration: BoxDecoration(
-                                      color: white.withOpacity(0.4),
-                                      border: Border.all(),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Text(widget.dept),
-                                ),
-                                Gap(height * 0.01),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    SizedBox(
-                                      height: height * 0.07,
-                                      width: width * 0.45,
-                                      child: TextFormField(
-                                        controller: idController,
-                                        decoration: InputDecoration(
-                                          hintText: 'ID',
-                                          border: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                          disabledBorder: OutlineInputBorder(
-                                              borderSide:
-                                                  BorderSide(color: black),
-                                              borderRadius:
-                                                  BorderRadius.circular(10)),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: width * .03,
-                                      ),
-                                      height: height * 0.07,
-                                      width: width * 0.45,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(),
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: width * 0.30,
-                                            child: Text(section),
-                                          ),
-                                          SizedBox(
-                                            width: width * 0.08,
-                                            child: PopupMenuButton(
-                                              icon: const Icon(
-                                                  Icons.arrow_drop_down_sharp),
-                                              itemBuilder: (context) => [
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        section = 'Sec - A';
-                                                        Navigator.pop(context);
-                                                      });
-                                                    },
-                                                    child: SizedBox(
-                                                      height: height * 0.04,
-                                                      width: width * 0.1,
-                                                      child: Text('A',
-                                                          style: textTheme
-                                                              .titleSmall!
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                    ),
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        section = 'Sec - B';
-                                                        Navigator.pop(context);
-                                                      });
-                                                    },
-                                                    child: SizedBox(
-                                                      height: height * 0.04,
-                                                      width: width * 0.1,
-                                                      child: Text('B',
-                                                          style: textTheme
-                                                              .titleSmall!
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                    ),
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        section = 'Sec - C';
-                                                        Navigator.pop(context);
-                                                      });
-                                                    },
-                                                    child: SizedBox(
-                                                      height: height * 0.04,
-                                                      width: width * 0.1,
-                                                      child: Text('C',
-                                                          style: textTheme
-                                                              .titleSmall!
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                    ),
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        section = 'Sec - D';
-                                                        Navigator.pop(context);
-                                                      });
-                                                    },
-                                                    child: SizedBox(
-                                                      height: height * 0.04,
-                                                      width: width * 0.1,
-                                                      child: Text('D',
-                                                          style: textTheme
-                                                              .titleSmall!
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                    ),
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        section = 'Sec - E';
-                                                        Navigator.pop(context);
-                                                      });
-                                                    },
-                                                    child: SizedBox(
-                                                      height: height * 0.04,
-                                                      width: width * 0.1,
-                                                      child: Text('E',
-                                                          style: textTheme
-                                                              .titleSmall!
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                    ),
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                  value: 1,
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        section = 'Sec - F';
-                                                        Navigator.pop(context);
-                                                      });
-                                                    },
-                                                    child: SizedBox(
-                                                      height: height * 0.04,
-                                                      width: width * 0.1,
-                                                      child: Text('F',
-                                                          style: textTheme
-                                                              .titleSmall!
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Gap(height * 0.01),
-                                TextFormField(
-                                  controller: skillController,
-                                  decoration: InputDecoration(
-                                    hintText: 'Best Skill',
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                ),
-                                Gap(height * 0.01),
-                                TextFormField(
-                                  controller: addressController,
-                                  decoration: InputDecoration(
-                                    hintText: 'Present Address',
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                ),
-                                Gap(height * 0.01),
-                                TextFormField(
-                                  maxLines: 3,
-                                  controller: noteController,
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(200),
-                                  ],
-                                  decoration: InputDecoration(
-                                    hintText: 'About your self (200 Characters)',
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                ),
-                                Gap(height * 0.01),TextFormField(
-                                  maxLines: 3,
-                                  controller: goalController,
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(200),
-                                  ],
-                                  decoration: InputDecoration(
-                                    hintText: 'Why do you want to join NCC ? (200 characters)',
-                                    border: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(20)),
-                                    enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    disabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: black),
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                ),
-                                Gap(height * 0.01),
-                              ],
-                            )),
-                        InkWell(
-                            onTap: () {
-                              addRequestPic(widget.photo);
-                            },
-                            child: const RoundButton(inputText: 'Submit')),
-                        Gap(height * 0.01),
-                      ],
+            child: Center(
+              child: StreamBuilder(
+                stream: ref.child(uid.toString()).onValue,
+                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
-                  } else {
-                    nameController.text = map?['name'];
-                    mailController.text = map?['mail'];
-                    section = map?['section'];
-                    ageController.text=map?['age'];
-                    idController.text=map?['id'];
-                    skillController.text=map?['skill'];
-                    gender=map?['gender'];
-                    phoneNumberController.text=map?['number'];
-                    addressController.text=map?['address'];
-                    noteController.text=map?['about'];
-                    goalController.text=map?['reason'];
-                    return Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          width: width,
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.5),
-                              border: Border.all()),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
+                  } else if (snapshot.hasData) {
+                    final DataSnapshot data = snapshot.data!.snapshot;
+                    final Map<dynamic, dynamic>? map =
+                        data.value as Map<dynamic, dynamic>?;
+                    isEditable = ((map?['dept'] == '') || (map?['dept'] == null));
+                    if (isEditable) {
+                      return Column(
+                        children: [
+                          Gap(height * 0.01),
+                          Center(
                             child: Stack(
+                              alignment: Alignment.bottomRight,
                               children: [
                                 Container(
-                                  width: 400,
-                                  height: 650,
+                                  height: height * 0.145,
+                                  width: height * 0.145,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(),
+                                      color: white,
+                                      border: Border.all(width: 2),
+                                      image: DecorationImage(
+                                          image: NetworkImage(widget.photo),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(100)),
+                                  child: widget.photo == ''
+                                      ? const Icon(
+                                          Icons.person,
+                                          size: 20,
+                                        )
+                                      : const SizedBox(),
+                                ),
+                                InkWell(
+                                  onTap: () {
+                                    getImageGallery();
+                                  },
+                                  child: CircleAvatar(
+                                      radius: 18,
+                                      backgroundColor: black.withOpacity(0.7),
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        color: white,
+                                      )),
+                                )
+                              ],
+                            ),
+                          ),
+                          Gap(height * 0.02),
+                          Text(
+                            '* To get NCC membership fill-up the form & submit',
+                            style: textTheme.bodyMedium,
+                          ),
+                          Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  Gap(height * 0.01),
+                                  TextFormField(
+                                    controller: nameController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Name',
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
                                   ),
-                                  child: Column(
+                                  Gap(height * 0.01),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const SizedBox(
-                                        width: 80,
-                                        height: 80,
-                                        child: Image(
-                                          image: AssetImage(
-                                              'assets/images/logo.png'),
-                                          fit: BoxFit.cover,
+                                      SizedBox(
+                                        height: height * 0.07,
+                                        width: width * 0.45,
+                                        child: TextFormField(
+                                          controller: ageController,
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            hintText: 'Age',
+                                            border: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            disabledBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                          ),
                                         ),
                                       ),
-                                      Text(
-                                        'Member Recruitment Form',
-                                        style: textTheme.titleMedium,
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: width * .03,
+                                        ),
+                                        height: height * 0.07,
+                                        width: width * 0.45,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: width * 0.30,
+                                              child: Text(gender),
+                                            ),
+                                            SizedBox(
+                                              width: width * 0.08,
+                                              child: PopupMenuButton(
+                                                icon: const Icon(
+                                                    Icons.arrow_drop_down_sharp),
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          gender = 'Male';
+                                                          Navigator.pop(context);
+                                                        });
+                                                      },
+                                                      child: SizedBox(
+                                                        height: height * 0.04,
+                                                        width: width * 0.2,
+                                                        child: Text('Male',
+                                                            style: textTheme
+                                                                .titleSmall!
+                                                                .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          gender = 'Female';
+                                                          Navigator.pop(context);
+                                                        });
+                                                      },
+                                                      child: SizedBox(
+                                                        height: height * 0.04,
+                                                        width: width * 0.2,
+                                                        child: Text('Female',
+                                                            style: textTheme
+                                                                .titleSmall!
+                                                                .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
-                                      const Gap(5),
+                                    ],
+                                  ),
+                                  Gap(height * 0.01),
+                                  TextFormField(
+                                    controller: mailController,
+                                    decoration: InputDecoration(
+                                      hintText: 'E-mail',
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                          BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                          BorderRadius.circular(10)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                          BorderRadius.circular(10)),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                          BorderRadius.circular(10)),
+                                    ),
+                                  ),
+                                  Gap(height * 0.01),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        height: height * 0.07,
+                                        width: width * 0.2,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(),
+                                            borderRadius: const BorderRadius.only(
+                                                topLeft: Radius.circular(10),
+                                                bottomLeft: Radius.circular(10))),
+                                        child: const Center(child: Text('+880')),
+                                      ),
                                       SizedBox(
-                                        width: 400,
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Column(
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 250,
-                                                            child: RichText(
-                                                                text: TextSpan(
-                                                                    children: [
-                                                                  TextSpan(
-                                                                      text:
-                                                                          'Name: ',
-                                                                      style: textTheme
-                                                                          .bodySmall!
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.bold)),
-                                                                  TextSpan(
-                                                                      text: map?[
-                                                                          'name'],
-                                                                      style: textTheme
-                                                                          .bodySmall)
-                                                                ])),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      const Gap(5),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 250,
-                                                            child: RichText(
-                                                                text: TextSpan(
-                                                                    children: [
-                                                                  TextSpan(
-                                                                      text:
-                                                                          'ID: ',
-                                                                      style: textTheme
-                                                                          .bodySmall!
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.bold)),
-                                                                  TextSpan(
-                                                                      text: map?[
-                                                                          'id'],
-                                                                      style: textTheme
-                                                                          .bodySmall)
-                                                                ])),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      const Gap(5),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 250,
-                                                            child: RichText(
-                                                                text: TextSpan(
-                                                                    children: [
-                                                                  TextSpan(
-                                                                      text:
-                                                                          'Section: ',
-                                                                      style: textTheme
-                                                                          .bodySmall!
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.bold)),
-                                                                  TextSpan(
-                                                                      text: map?[
-                                                                          'section'],
-                                                                      style: textTheme
-                                                                          .bodySmall)
-                                                                ])),
-                                                          )
-                                                        ],
-                                                      ),
-                                                      const Gap(5),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 250,
-                                                            child: RichText(
-                                                                text: TextSpan(
-                                                                    children: [
-                                                                  TextSpan(
-                                                                      text:
-                                                                          'Department: ',
-                                                                      style: textTheme
-                                                                          .bodySmall!
-                                                                          .copyWith(
-                                                                              fontWeight: FontWeight.bold)),
-                                                                  TextSpan(
-                                                                      text: map?[
-                                                                          'dept'],
-                                                                      style: textTheme
-                                                                          .bodySmall)
-                                                                ])),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    children: [
-                                                      Container(
-                                                          height: 110,
-                                                          width: 110,
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(2),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  border: Border
-                                                                      .all()),
-                                                          child: Image(
-                                                            image: NetworkImage(
-                                                              map?['Image'],
-                                                            ),
-                                                            fit: BoxFit.cover,
-                                                          )),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                              const Gap(5),
-                                              Center(child: Text("Applicant Detail's",style: textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),)),
-                                              const Gap(5),
-                                              Row(
-                                                children: [
-                                                  RichText(
-                                                      text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                                text:
-                                                                'Age: ',
-                                                                style: textTheme
-                                                                    .bodySmall!
-                                                                    .copyWith(
-                                                                    fontWeight: FontWeight.bold)),
-                                                            TextSpan(
-                                                                text: map?[
-                                                                'age'],
-                                                                style: textTheme
-                                                                    .bodySmall)
-                                                          ])),
-                                                  const Gap(50),
-                                                  RichText(
-                                                      text: TextSpan(
-                                                          children: [
-                                                            TextSpan(
-                                                                text:
-                                                                'Gender: ',
-                                                                style: textTheme
-                                                                    .bodySmall!
-                                                                    .copyWith(
-                                                                    fontWeight: FontWeight.bold)),
-                                                            TextSpan(
-                                                                text: map?[
-                                                                'gender'],
-                                                                style: textTheme
-                                                                    .bodySmall)
-                                                          ])),
-                                                ],
-                                              ),
-                                              RichText(
-                                                  text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                            text:
-                                                            'E-mail: ',
-                                                            style: textTheme
-                                                                .bodySmall!
-                                                                .copyWith(
-                                                                fontWeight: FontWeight.bold)),
-                                                        TextSpan(
-                                                            text: map?[
-                                                            'mail'],
-                                                            style: textTheme
-                                                                .bodySmall)
-                                                      ])),
-                                              RichText(
-                                                  text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                            text:
-                                                            'Mobile Number: ',
-                                                            style: textTheme
-                                                                .bodySmall!
-                                                                .copyWith(
-                                                                fontWeight: FontWeight.bold)),
-                                                        TextSpan(
-                                                            text: '+880${map?['number']}',
-                                                            style: textTheme
-                                                                .bodySmall)
-                                                      ])),
-                                              RichText(
-                                                  text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                            text:
-                                                            'Address: ',
-                                                            style: textTheme
-                                                                .bodySmall!
-                                                                .copyWith(
-                                                                fontWeight: FontWeight.bold)),
-                                                        TextSpan(
-                                                            text: map?['address'],
-                                                            style: textTheme
-                                                                .bodySmall)
-                                                      ])),
-                                              const Gap(5),
-                                              const Divider(),
-                                              const Gap(5),
-                                              RichText(
-                                                  text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                            text:
-                                                            "About Applicant's: ",
-                                                            style: textTheme
-                                                                .bodySmall!
-                                                                .copyWith(
-                                                                fontWeight: FontWeight.bold)),
-                                                        TextSpan(
-                                                            text: map?['about'],
-                                                            style: textTheme
-                                                                .bodySmall)
-                                                      ])),
-                                              const Gap(5),
-                                              const Divider(),
-                                              const Gap(5),
-                                              RichText(
-                                                  text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                            text:
-                                                            'Reason for joining NCC : ',
-                                                            style: textTheme
-                                                                .bodySmall!
-                                                                .copyWith(
-                                                                fontWeight: FontWeight.bold)),
-                                                        TextSpan(
-                                                            text: map?['reason'],
-                                                            style: textTheme
-                                                                .bodySmall)
-                                                      ])),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                children: [
-                                                  SizedBox(
-                                                    height: 100,
-                                                    width: 130,
-                                                    child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        const Divider(),
-                                                        Text("Applicant's Signature",style: textTheme.bodySmall,)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 100,
-                                                    width: 130,
-                                                    child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                      children: [
-                                                        const Divider(),
-                                                        Text("Executive's Signature",style: textTheme.bodySmall,)
-                                                      ],
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              const Gap(20),
-                                              Center(child: Text("This is an auto-generated application by NCC",style: textTheme.labelSmall,))
-                                            ],
+                                        height: height * 0.07,
+                                        width: width * 0.74,
+                                        child: TextFormField(
+                                          controller: phoneNumberController,
+                                          keyboardType: TextInputType.number,
+                                          decoration: InputDecoration(
+                                            hintText: 'Number',
+                                            border: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        topRight:
+                                                            Radius.circular(10),
+                                                        bottomRight:
+                                                            Radius.circular(10))),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        topRight:
+                                                            Radius.circular(10),
+                                                        bottomRight:
+                                                            Radius.circular(10))),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        topRight:
+                                                            Radius.circular(10),
+                                                        bottomRight:
+                                                            Radius.circular(10))),
+                                            disabledBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        topRight:
+                                                            Radius.circular(10),
+                                                        bottomRight:
+                                                            Radius.circular(10))),
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
-                                ),
-                                Positioned(
-                                    left: 10,
-                                    bottom: 6,
+                                  Gap(height * 0.01),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width * .03,
+                                        vertical: height * 0.02),
+                                    height: height * 0.07,
+                                    width: width * 0.95,
+                                    decoration: BoxDecoration(
+                                        color: white.withOpacity(0.4),
+                                        border: Border.all(),
+                                        borderRadius: BorderRadius.circular(10)),
+                                    child: Text(widget.dept),
+                                  ),
+                                  Gap(height * 0.01),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        height: height * 0.07,
+                                        width: width * 0.45,
+                                        child: TextFormField(
+                                          controller: idController,
+                                          decoration: InputDecoration(
+                                            hintText: 'ID',
+                                            border: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            disabledBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: black),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: width * .03,
+                                        ),
+                                        height: height * 0.07,
+                                        width: width * 0.45,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: width * 0.30,
+                                              child: Text(section),
+                                            ),
+                                            SizedBox(
+                                              width: width * 0.08,
+                                              child: PopupMenuButton(
+                                                icon: const Icon(
+                                                    Icons.arrow_drop_down_sharp),
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          section = 'Sec - A';
+                                                          Navigator.pop(context);
+                                                        });
+                                                      },
+                                                      child: SizedBox(
+                                                        height: height * 0.04,
+                                                        width: width * 0.1,
+                                                        child: Text('A',
+                                                            style: textTheme
+                                                                .titleSmall!
+                                                                .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          section = 'Sec - B';
+                                                          Navigator.pop(context);
+                                                        });
+                                                      },
+                                                      child: SizedBox(
+                                                        height: height * 0.04,
+                                                        width: width * 0.1,
+                                                        child: Text('B',
+                                                            style: textTheme
+                                                                .titleSmall!
+                                                                .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          section = 'Sec - C';
+                                                          Navigator.pop(context);
+                                                        });
+                                                      },
+                                                      child: SizedBox(
+                                                        height: height * 0.04,
+                                                        width: width * 0.1,
+                                                        child: Text('C',
+                                                            style: textTheme
+                                                                .titleSmall!
+                                                                .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          section = 'Sec - D';
+                                                          Navigator.pop(context);
+                                                        });
+                                                      },
+                                                      child: SizedBox(
+                                                        height: height * 0.04,
+                                                        width: width * 0.1,
+                                                        child: Text('D',
+                                                            style: textTheme
+                                                                .titleSmall!
+                                                                .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          section = 'Sec - E';
+                                                          Navigator.pop(context);
+                                                        });
+                                                      },
+                                                      child: SizedBox(
+                                                        height: height * 0.04,
+                                                        width: width * 0.1,
+                                                        child: Text('E',
+                                                            style: textTheme
+                                                                .titleSmall!
+                                                                .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    value: 1,
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          section = 'Sec - F';
+                                                          Navigator.pop(context);
+                                                        });
+                                                      },
+                                                      child: SizedBox(
+                                                        height: height * 0.04,
+                                                        width: width * 0.1,
+                                                        child: Text('F',
+                                                            style: textTheme
+                                                                .titleSmall!
+                                                                .copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Gap(height * 0.01),
+                                  TextFormField(
+                                    controller: skillController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Best Skill',
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                  ),
+                                  Gap(height * 0.01),
+                                  TextFormField(
+                                    controller: addressController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Present Address',
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                  ),
+                                  Gap(height * 0.01),
+                                  TextFormField(
+                                    maxLines: 3,
+                                    controller: noteController,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(200),
+                                    ],
+                                    decoration: InputDecoration(
+                                      hintText: 'About your self (200 Characters)',
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                  ),
+                                  Gap(height * 0.01),TextFormField(
+                                    maxLines: 3,
+                                    controller: goalController,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(200),
+                                    ],
+                                    decoration: InputDecoration(
+                                      hintText: 'Why do you want to join NCC ? (200 characters)',
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      disabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                  ),
+                                  Gap(height * 0.01),
+                                ],
+                              )),
+                          InkWell(
+                              onTap: () {
+                                addRequestPic(widget.photo);
+                              },
+                              child: const RoundButton(inputText: 'Submit')),
+                          Gap(height * 0.01),
+                        ],
+                      );
+                    } else {
+                      nameController.text = map?['name'];
+                      mailController.text = map?['mail'];
+                      section = map?['section'];
+                      ageController.text=map?['age'];
+                      idController.text=map?['id'];
+                      skillController.text=map?['skill'];
+                      gender=map?['gender'];
+                      phoneNumberController.text=map?['number'];
+                      addressController.text=map?['address'];
+                      noteController.text=map?['about'];
+                      goalController.text=map?['reason'];
+                      return Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            width: width,
+                            decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                border: Border.all()),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 400,
+                                    height: 650,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(),
+                                    ),
                                     child: Column(
                                       children: [
-                                        RichText(
-                                            text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                      text:
-                                                      'Date: ',
-                                                      style: textTheme
-                                                          .labelSmall!.copyWith(fontSize: 8)),
-                                                  TextSpan(
-                                                      text: map?[
-                                                      'date'],
-                                                      style: textTheme
-                                                          .labelSmall!.copyWith(fontSize: 8))
-                                                ])),
+                                        const SizedBox(
+                                          width: 80,
+                                          height: 80,
+                                          child: Image(
+                                            image: AssetImage(
+                                                'assets/images/logo.png'),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Member Recruitment Form',
+                                          style: textTheme.titleMedium,
+                                        ),
+                                        const Gap(5),
+                                        SizedBox(
+                                          width: 400,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Column(
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 250,
+                                                              child: RichText(
+                                                                  text: TextSpan(
+                                                                      children: [
+                                                                    TextSpan(
+                                                                        text:
+                                                                            'Name: ',
+                                                                        style: textTheme
+                                                                            .bodySmall!
+                                                                            .copyWith(
+                                                                                fontWeight: FontWeight.bold)),
+                                                                    TextSpan(
+                                                                        text: map?[
+                                                                            'name'],
+                                                                        style: textTheme
+                                                                            .bodySmall)
+                                                                  ])),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        const Gap(5),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 250,
+                                                              child: RichText(
+                                                                  text: TextSpan(
+                                                                      children: [
+                                                                    TextSpan(
+                                                                        text:
+                                                                            'ID: ',
+                                                                        style: textTheme
+                                                                            .bodySmall!
+                                                                            .copyWith(
+                                                                                fontWeight: FontWeight.bold)),
+                                                                    TextSpan(
+                                                                        text: map?[
+                                                                            'id'],
+                                                                        style: textTheme
+                                                                            .bodySmall)
+                                                                  ])),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        const Gap(5),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 250,
+                                                              child: RichText(
+                                                                  text: TextSpan(
+                                                                      children: [
+                                                                    TextSpan(
+                                                                        text:
+                                                                            'Section: ',
+                                                                        style: textTheme
+                                                                            .bodySmall!
+                                                                            .copyWith(
+                                                                                fontWeight: FontWeight.bold)),
+                                                                    TextSpan(
+                                                                        text: map?[
+                                                                            'section'],
+                                                                        style: textTheme
+                                                                            .bodySmall)
+                                                                  ])),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        const Gap(5),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 250,
+                                                              child: RichText(
+                                                                  text: TextSpan(
+                                                                      children: [
+                                                                    TextSpan(
+                                                                        text:
+                                                                            'Department: ',
+                                                                        style: textTheme
+                                                                            .bodySmall!
+                                                                            .copyWith(
+                                                                                fontWeight: FontWeight.bold)),
+                                                                    TextSpan(
+                                                                        text: map?[
+                                                                            'dept'],
+                                                                        style: textTheme
+                                                                            .bodySmall)
+                                                                  ])),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    Column(
+                                                      children: [
+                                                        Container(
+                                                            height: 110,
+                                                            width: 110,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(2),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    border: Border
+                                                                        .all()),
+                                                            child: Image(
+                                                              image: NetworkImage(
+                                                                map?['Image'],
+                                                              ),
+                                                              fit: BoxFit.cover,
+                                                            )),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                                const Gap(5),
+                                                Center(child: Text("Applicant Detail's",style: textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),)),
+                                                const Gap(5),
+                                                Row(
+                                                  children: [
+                                                    RichText(
+                                                        text: TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                  text:
+                                                                  'Age: ',
+                                                                  style: textTheme
+                                                                      .bodySmall!
+                                                                      .copyWith(
+                                                                      fontWeight: FontWeight.bold)),
+                                                              TextSpan(
+                                                                  text: map?[
+                                                                  'age'],
+                                                                  style: textTheme
+                                                                      .bodySmall)
+                                                            ])),
+                                                    const Gap(50),
+                                                    RichText(
+                                                        text: TextSpan(
+                                                            children: [
+                                                              TextSpan(
+                                                                  text:
+                                                                  'Gender: ',
+                                                                  style: textTheme
+                                                                      .bodySmall!
+                                                                      .copyWith(
+                                                                      fontWeight: FontWeight.bold)),
+                                                              TextSpan(
+                                                                  text: map?[
+                                                                  'gender'],
+                                                                  style: textTheme
+                                                                      .bodySmall)
+                                                            ])),
+                                                  ],
+                                                ),
+                                                RichText(
+                                                    text: TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                              text:
+                                                              'E-mail: ',
+                                                              style: textTheme
+                                                                  .bodySmall!
+                                                                  .copyWith(
+                                                                  fontWeight: FontWeight.bold)),
+                                                          TextSpan(
+                                                              text: map?[
+                                                              'mail'],
+                                                              style: textTheme
+                                                                  .bodySmall)
+                                                        ])),
+                                                RichText(
+                                                    text: TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                              text:
+                                                              'Mobile Number: ',
+                                                              style: textTheme
+                                                                  .bodySmall!
+                                                                  .copyWith(
+                                                                  fontWeight: FontWeight.bold)),
+                                                          TextSpan(
+                                                              text: '+880${map?['number']}',
+                                                              style: textTheme
+                                                                  .bodySmall)
+                                                        ])),
+                                                RichText(
+                                                    text: TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                              text:
+                                                              'Address: ',
+                                                              style: textTheme
+                                                                  .bodySmall!
+                                                                  .copyWith(
+                                                                  fontWeight: FontWeight.bold)),
+                                                          TextSpan(
+                                                              text: map?['address'],
+                                                              style: textTheme
+                                                                  .bodySmall)
+                                                        ])),
+                                                const Gap(5),
+                                                const Divider(),
+                                                const Gap(5),
+                                                RichText(
+                                                    text: TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                              text:
+                                                              "About Applicant's: ",
+                                                              style: textTheme
+                                                                  .bodySmall!
+                                                                  .copyWith(
+                                                                  fontWeight: FontWeight.bold)),
+                                                          TextSpan(
+                                                              text: map?['about'],
+                                                              style: textTheme
+                                                                  .bodySmall)
+                                                        ])),
+                                                const Gap(5),
+                                                const Divider(),
+                                                const Gap(5),
+                                                RichText(
+                                                    text: TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                              text:
+                                                              'Reason for joining NCC : ',
+                                                              style: textTheme
+                                                                  .bodySmall!
+                                                                  .copyWith(
+                                                                  fontWeight: FontWeight.bold)),
+                                                          TextSpan(
+                                                              text: map?['reason'],
+                                                              style: textTheme
+                                                                  .bodySmall)
+                                                        ])),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 100,
+                                                      width: 130,
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          const Divider(),
+                                                          Text("Applicant's Signature",style: textTheme.bodySmall,)
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 100,
+                                                      width: 130,
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: [
+                                                          const Divider(),
+                                                          Text("Executive's Signature",style: textTheme.bodySmall,)
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                                const Gap(20),
+                                                Center(child: Text("This is an auto-generated application by NCC",style: textTheme.labelSmall,))
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                                       ],
-                                    )),
-                              ],
+                                    ),
+                                  ),
+                                  Positioned(
+                                      left: 10,
+                                      bottom: 6,
+                                      child: Column(
+                                        children: [
+                                          RichText(
+                                              text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                        text:
+                                                        'Date: ',
+                                                        style: textTheme
+                                                            .labelSmall!.copyWith(fontSize: 8)),
+                                                    TextSpan(
+                                                        text: map?[
+                                                        'date'],
+                                                        style: textTheme
+                                                            .labelSmall!.copyWith(fontSize: 8))
+                                                  ])),
+                                        ],
+                                      )),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Gap(height*0.01),
-                        const Text('You already submit this Application'),
-                        Gap(height*0.01),
-                        Container(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            InkWell(
-                                onTap: () {
-                                  ref.child(uid!).update({
-                                    'dept': '',
-                                  });
-                                },
-                                child: const RoundButton(
-                                    inputText: 'Edit Application')),
-                            InkWell(
-                                onTap: () {
+                          Gap(height*0.01),
+                          const Text('You already submit this Application'),
+                          Gap(height*0.01),
+                          Container(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              InkWell(
+                                  onTap: () {
+                                    ref.child(uid!).update({
+                                      'dept': '',
+                                    });
+                                  },
+                                  child: const RoundButton(
+                                      inputText: 'Edit Application')),
+                              InkWell(
+                                  onTap: () {
 
-                                },
-                                child: const RoundButton(
-                                    inputText: 'Download PDF')),
-                          ],
-                        ),
-                        Gap(height*0.01),
-                      ],
-                    );
+                                  },
+                                  child: const RoundButton(
+                                      inputText: 'Download PDF')),
+                            ],
+                          ),
+                          Gap(height*0.01),
+                        ],
+                      );
+                    }
+                  } else {
+                    return const Center(child: Text('Something Wrong'));
                   }
-                } else {
-                  return const Center(child: Text('Something Wrong'));
-                }
-              },
+                },
+              ),
             ),
           ),
         ),

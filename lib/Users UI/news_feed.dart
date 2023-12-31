@@ -50,10 +50,9 @@ class _NewsFeedState extends State<NewsFeed> {
           child: Column(
             children: [
               SizedBox(
-                height: height,
+                height: height*0.80,
                 width: width,
                 child: FirebaseAnimatedList(
-                    scrollDirection: Axis.vertical,
                     query: ref,
                     sort: (DataSnapshot a, DataSnapshot b) {
                       return b.key!.compareTo(a.key!);
@@ -67,6 +66,7 @@ class _NewsFeedState extends State<NewsFeed> {
                         postKey: snapshot.child('postKey').value.toString(),
                         like: snapshot.child('like').children.indexed.length.toString(),
                         isLiked: snapshot.child('like').child(uid!).exists,
+                        isAdmin: widget.isAdmin,
                       );
                     }),
               ),
