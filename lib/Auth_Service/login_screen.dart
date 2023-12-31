@@ -26,10 +26,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final textTheme = Theme.of(context).textTheme;
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (_) async {
         SystemNavigator.pop();
-        return true;
       },
       child: Scaffold(
         body: Container(
@@ -62,76 +61,82 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: textTheme.headlineLarge!
                             .copyWith(fontWeight: FontWeight.bold)),
                     Gap(height * 0.03),
-                    TextFormField(
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.email_outlined),
-                        hintText: 'E-mail',
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: black),
-                            borderRadius: BorderRadius.circular(20)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: black),
-                            borderRadius: BorderRadius.circular(20)),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: black),
-                            borderRadius: BorderRadius.circular(20)),
-                        disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: black),
-                            borderRadius: BorderRadius.circular(20)),
+                    AutofillGroup(
+                      child: TextFormField(
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.email_outlined),
+                          hintText: 'E-mail',
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: black),
+                              borderRadius: BorderRadius.circular(20)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: black),
+                              borderRadius: BorderRadius.circular(20)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: black),
+                              borderRadius: BorderRadius.circular(20)),
+                          disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: black),
+                              borderRadius: BorderRadius.circular(20)),
+                        ),
                       ),
                     ),
                     Gap(height * 0.02),
-                    TextFormField(
-                      controller: passController,
-                      obscureText: seePass,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.lock_open),
-                        suffixIcon: InkWell(
-                            onTap: () {
-                              if (seePass) {
-                                setState(() {
-                                  seePass = false;
-                                });
-                              } else {
-                                setState(() {
-                                  seePass = true;
-                                });
-                              }
-                            },
-                            child: SizedBox(
-                              height: 10,
-                              width: 10,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    bottom: 15, right: 15),
-                                child: Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: seePass
-                                        ? const FaIcon(
-                                            FontAwesomeIcons.solidEye,
-                                            size: 18,
-                                          )
-                                        : const FaIcon(
-                                            FontAwesomeIcons.eyeLowVision,
-                                            size: 18,
-                                          )),
-                              ),
-                            )),
-                        hintText: 'Password',
-                        border: OutlineInputBorder(
-                            borderSide: BorderSide(color: black),
-                            borderRadius: BorderRadius.circular(20)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: black),
-                            borderRadius: BorderRadius.circular(20)),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: black),
-                            borderRadius: BorderRadius.circular(20)),
-                        disabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: black),
-                            borderRadius: BorderRadius.circular(20)),
+                    AutofillGroup(
+                      child: TextFormField(
+                        controller: passController,
+                        obscureText: seePass,
+                        autofillHints: const [AutofillHints.password],
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.lock_open),
+                          suffixIcon: InkWell(
+                              onTap: () {
+                                if (seePass) {
+                                  setState(() {
+                                    seePass = false;
+                                  });
+                                } else {
+                                  setState(() {
+                                    seePass = true;
+                                  });
+                                }
+                              },
+                              child: SizedBox(
+                                height: 10,
+                                width: 10,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      bottom: 15, right: 15),
+                                  child: Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: seePass
+                                          ? const FaIcon(
+                                              FontAwesomeIcons.solidEye,
+                                              size: 18,
+                                            )
+                                          : const FaIcon(
+                                              FontAwesomeIcons.eyeLowVision,
+                                              size: 18,
+                                            )),
+                                ),
+                              )),
+                          hintText: 'Password',
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: black),
+                              borderRadius: BorderRadius.circular(20)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: black),
+                              borderRadius: BorderRadius.circular(20)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: black),
+                              borderRadius: BorderRadius.circular(20)),
+                          disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: black),
+                              borderRadius: BorderRadius.circular(20)),
+                        ),
                       ),
                     ),
                     Gap(height * 0.005),
@@ -287,6 +292,7 @@ class _LoginScreenState extends State<LoginScreen> {
       )
           .then((value) {
         Utils().toastMessages('Login Successfully');
+        TextInput.finishAutofillContext();
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const ConfirmScreen()));
       }).onError((error, stackTrace) {

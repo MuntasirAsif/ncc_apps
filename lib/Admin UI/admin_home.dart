@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
+import 'package:ncc_apps/Admin%20UI/member_request.dart';
 import 'package:ncc_apps/Users%20UI/post_screen.dart';
-import '../Users UI/Cards/achevement_view.dart';
+import '../Users UI/Cards/achievement_view.dart';
 import '../Utils/colors.dart';
 import '../Utils/utils.dart';
 
@@ -50,7 +51,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         actions: [
           Gap(width * .05),
           Icon(
-            Icons.menu,
+            Icons.notifications,
             size: 30,
             color: black,
           ),
@@ -115,6 +116,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                   child: FirebaseAnimatedList(
                     query: ref,
                     scrollDirection: Axis.horizontal,
+                    sort: (DataSnapshot a, DataSnapshot b) {
+                      return b.key!.compareTo(a.key!);
+                    },
                     itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index) {
                       return AchievementView(
                         title: snapshot.child('title').value.toString(),
@@ -123,6 +127,64 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                         postContent: snapshot.child('postContent').value.toString(),);
                     },
                   ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: width*0.03),
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const MemberRequest()));
+                        },
+                        child: Container(
+                          height: height * 0.09,
+                          width: width * 0.95,
+                          decoration: BoxDecoration(
+                              color: grey.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Center(
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: white,
+                                backgroundImage: const AssetImage('assets/images/logo.png'),
+                                radius: 30,
+                              ),
+                              title: Text(
+                                'Member Request',
+                                style: textTheme.titleLarge,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Gap(height * 0.01),
+                      InkWell(
+                        onTap: () {
+
+                        },
+                        child: Container(
+                          height: height * 0.09,
+                          width: width * 0.95,
+                          decoration: BoxDecoration(
+                              color: grey.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Center(
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: white,
+                                backgroundImage: const AssetImage('assets/images/logo.png'),
+                                radius: 30,
+                              ),
+                              title: Text(
+                                'NCC Members',
+                                style: textTheme.titleLarge,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ),
               ],
             ),

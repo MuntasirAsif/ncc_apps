@@ -65,24 +65,27 @@ class _ResetPasswordState extends State<ResetPassword> {
                 Gap(height * 0.02),
                 Text('Enter Your Email',style: textTheme.bodyLarge,),
                 Gap(height * 0.02),
-                TextFormField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.email_outlined),
-                    hintText: 'Enter E-mail',
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: black),
-                        borderRadius: BorderRadius.circular(20)),
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: black),
-                        borderRadius: BorderRadius.circular(20)),
-                    enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: black),
-                        borderRadius: BorderRadius.circular(20)),
-                    disabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: black),
-                        borderRadius: BorderRadius.circular(20)),
+                AutofillGroup(
+                  child: TextFormField(
+                    controller: emailController,
+                    autofillHints: const [AutofillHints.email],
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.email_outlined),
+                      hintText: 'Enter E-mail',
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
                   ),
                 ),
                 Gap(height * 0.04),

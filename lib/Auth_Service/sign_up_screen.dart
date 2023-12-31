@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:ncc_apps/Auth_Service/verification_screen.dart';
 import '../Utils/colors.dart';
@@ -67,182 +68,188 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Gap(height * 0.03),
                   Form(
                       key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: nameController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Enter Name';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.person),
-                              hintText: 'Name',
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                            ),
-                          ),
-                          Gap(height * 0.02),
-                          TextFormField(
-                            keyboardType: TextInputType.number,
-                            controller: batchController,
-                            validator: (value) {
-                              String batchText = value.toString();
-                              int batch = int.parse(batchText);
-                              if (value!.isEmpty) {
-                                return 'Enter Batch No';
-                              } else if (batch >= 13 && batch <= 0) {
-                                return 'Batch is not exist';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.confirmation_num),
-                              helperText: 'If you are Teacher then enter -"0"',
-                              hintText: 'Batch No',
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                            ),
-                          ),
-                          Gap(height * 0.02),
-                          InkWell(
-                            onTap: () {
-                              showDepartmentDialog();
-                            },
-                            child: Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Row(
-                                children: [
-                                  const Gap(10),
-                                  const Icon(Icons.home_work_outlined),
-                                  const Gap(10),
-                                  SizedBox(
-                                    width: width * 0.75,
-                                    child: Text(
-                                      selectedDept == ""
-                                          ? 'Select Department'
-                                          : selectedDept,
-                                      style: textTheme.bodyLarge,
-                                    ),
-                                  )
-                                ],
+                      child: AutofillGroup(
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: nameController,
+                              autofillHints: const [AutofillHints.name],
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Enter Name';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.person),
+                                hintText: 'Name',
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
                               ),
                             ),
-                          ),
-                          Gap(height * 0.02),
-                          TextFormField(
-                            controller: emailController,
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Enter e-mail';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.email_outlined),
-                              hintText: 'E-mail',
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
+                            Gap(height * 0.02),
+                            TextFormField(
+                              keyboardType: TextInputType.number,
+                              controller: batchController,
+                              validator: (value) {
+                                String batchText = value.toString();
+                                int batch = int.parse(batchText);
+                                if (value!.isEmpty) {
+                                  return 'Enter Batch No';
+                                } else if (batch >= 13 && batch <= 0) {
+                                  return 'Batch is not exist';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.confirmation_num),
+                                helperText: 'If you are Teacher then enter -"0"',
+                                hintText: 'Batch No',
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                              ),
                             ),
-                          ),
-                          Gap(height * 0.02),
-                          TextFormField(
-                            controller: passController,
-                            validator: (value) {
-                              rePass = value;
-                              if (value!.isEmpty) {
-                                return 'Enter password';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.lock_open),
-                              hintText: 'Password',
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
+                            Gap(height * 0.02),
+                            InkWell(
+                              onTap: () {
+                                showDepartmentDialog();
+                              },
+                              child: Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                    border: Border.all(),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Row(
+                                  children: [
+                                    const Gap(10),
+                                    const Icon(Icons.home_work_outlined),
+                                    const Gap(10),
+                                    SizedBox(
+                                      width: width * 0.75,
+                                      child: Text(
+                                        selectedDept == ""
+                                            ? 'Select Department'
+                                            : selectedDept,
+                                        style: textTheme.bodyLarge,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                          Gap(height * 0.02),
-                          TextFormField(
-                            controller: confirmPassController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Confirm Password';
-                              } else if (value != rePass.toString()) {
-                                return 'Password must be same';
-                              } else {
-                                return null;
-                              }
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: const Icon(Icons.lock_open),
-                              hintText: 'Confirm-Password',
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: black),
-                                  borderRadius: BorderRadius.circular(20)),
+                            Gap(height * 0.02),
+                            TextFormField(
+                              controller: emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              autofillHints: const [AutofillHints.email],
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Enter e-mail';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.email_outlined),
+                                hintText: 'E-mail',
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                              ),
                             ),
-                          ),
-                          Gap(height * 0.02),
-                        ],
+                            Gap(height * 0.02),
+                            TextFormField(
+                              controller: passController,
+                              autofillHints: const [AutofillHints.password],
+                              validator: (value) {
+                                rePass = value;
+                                if (value!.isEmpty) {
+                                  return 'Enter password';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.lock_open),
+                                hintText: 'Password',
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                              ),
+                            ),
+                            Gap(height * 0.02),
+                            TextFormField(
+                              controller: confirmPassController,
+                              autofillHints: const [AutofillHints.password],
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Confirm Password';
+                                } else if (value != rePass.toString()) {
+                                  return 'Password must be same';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.lock_open),
+                                hintText: 'Confirm-Password',
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                                disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: black),
+                                    borderRadius: BorderRadius.circular(20)),
+                              ),
+                            ),
+                            Gap(height * 0.02),
+                          ],
+                        ),
                       )),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -307,6 +314,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           createUserWithEmailAndPassword(
                               emailController.text.toString(),
                               passController.text.toString());
+                          TextInput.finishAutofillContext();
                         }
                       },
                       child: const RoundButton(

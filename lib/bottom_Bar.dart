@@ -48,10 +48,17 @@ class _BottomBarState extends State<BottomBar> {
     ];
     final User? user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
-    return WillPopScope.new(
-      onWillPop: () async {
-        SystemNavigator.pop();
-        return true;
+    return PopScope(
+      canPop: false, // prevent back
+      onPopInvoked: (_) async {
+        // This can be async and you can check your condition
+        if(_selectedIndex>0){
+          setState(() {
+            _selectedIndex=0;
+          });
+        }else{
+          SystemNavigator.pop();
+        }
       },
       child: Scaffold(
         //backgroundColor: Colors.black54,
@@ -95,7 +102,7 @@ class _BottomBarState extends State<BottomBar> {
                     BottomNavigationBarItem(
                         icon: FaIcon(FontAwesomeIcons.user), label: 'Profile'),
                   ],
-                )
+                ),
       ),
     );
   }

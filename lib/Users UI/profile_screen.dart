@@ -9,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ncc_apps/Auth_Service/login_screen.dart';
 import 'package:ncc_apps/Auth_Service/reset_password.dart';
 import 'package:ncc_apps/Users%20UI/Cards/news_View.dart';
-import 'package:ncc_apps/Users%20UI/NCC_membership_request.dart';
+import 'package:ncc_apps/Users%20UI/ncc_membership_request.dart';
 import 'package:ncc_apps/Users%20UI/post_screen.dart';
 import 'package:ncc_apps/Utils/colors.dart';
 import 'dart:io';
@@ -24,7 +24,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late String photo;
+  String photo = '';
   late String url;
   File? image;
   final picker = ImagePicker();
@@ -60,12 +60,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
               PopupMenuItem(
                 value: 1,
                 child: InkWell(
-                  onTap:(){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const NCCMemberRequest(photo: '',)));
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NCCMemberRequest(
+                                  photo: photo,
+                                  name: nameController.text,
+                                  dept: departmentController.text,
+                                  id: idController.text,
+                                  position: positionController.text,
+                                )));
                   },
                   child: SizedBox(
-                    height: height*0.04,
-                    width: width*0.3,
+                    height: height * 0.04,
+                    width: width * 0.3,
                     child: Text('NCC Membership',
                         style: textTheme.titleSmall!
                             .copyWith(fontWeight: FontWeight.w400)),
@@ -75,12 +84,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               PopupMenuItem(
                 value: 1,
                 child: InkWell(
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>const ResetPassword()));
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ResetPassword()));
                   },
                   child: SizedBox(
-                    height: height*0.04,
-                    width: width*0.3,
+                    height: height * 0.04,
+                    width: width * 0.3,
                     child: Text('Change password',
                         style: textTheme.titleSmall!
                             .copyWith(fontWeight: FontWeight.w400)),
@@ -90,13 +102,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               PopupMenuItem(
                 value: 1,
                 child: InkWell(
-                  onTap: (){
+                  onTap: () {
                     logOut();
                   },
                   child: SizedBox(
-                    height: height*0.04,
-                    width: width*0.3,
-                    child: Text('Long out',
+                    height: height * 0.04,
+                    width: width * 0.3,
+                    child: Text('Log out',
                         style: textTheme.titleSmall!
                             .copyWith(fontWeight: FontWeight.w400)),
                   ),
@@ -128,6 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 idController.text = map?['id'];
                 departmentController.text = map?['department'];
                 positionController.text = map?['position'];
+                photo = map?['profileImage'];
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,44 +157,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Row(
                             children: [
                               Stack(
+                                alignment: Alignment.bottomRight,
                                 children: [
-                                  Stack(
-                                    alignment: Alignment.bottomRight,
-                                    children: [
-                                      Container(
-                                          width: 118,
-                                          height: 118,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                  color: Colors.black87,
-                                                  width: 3)),
-                                          child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                              child: map?['profileImage']
-                                                          .toString() ==
-                                                      ""
-                                                  ? const Icon(Icons.person)
-                                                  : Image(
-                                                      fit: BoxFit.cover,
-                                                      image: NetworkImage(map?[
-                                                          'profileImage'])))),
-                                      InkWell(
-                                        onTap: () {
-                                          getImageGallery();
-                                        },
-                                        child: const CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: Colors.black,
-                                          child: Icon(
-                                            Icons.add,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                  Container(
+                                      width: 118,
+                                      height: 118,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                              color: Colors.black87, width: 3)),
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(100),
+                                          child: map?['profileImage']
+                                                      .toString() ==
+                                                  ""
+                                              ? const Icon(Icons.person)
+                                              : Image(
+                                                  fit: BoxFit.cover,
+                                                  image: NetworkImage(
+                                                      map?['profileImage'])))),
+                                  InkWell(
+                                    onTap: () {
+                                      getImageGallery();
+                                    },
+                                    child: CircleAvatar(
+                                        radius: 18,
+                                        backgroundColor: black.withOpacity(0.7),
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          color: white,
+                                        ))
+                                  )
                                 ],
                               ),
                               Gap(width * 0.02),
@@ -479,13 +486,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         });
   }
-  void logOut()async{
+
+  void logOut() async {
     try {
-      await FirebaseAuth.instance.signOut().then((value){
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const LoginScreen()));
+      await FirebaseAuth.instance.signOut().then((value) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
         Utils().toastMessages('SignOut');
       });
     } catch (error) {

@@ -33,15 +33,26 @@ class AchievementScreen extends StatelessWidget {
         ),
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: height*0.4,
                   width: width,
                   child: Image(image: NetworkImage(image),fit: BoxFit.cover,)),
               Gap(height*0.01),
-              Text(title,style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),),
-              Gap(height*0.01),
-              Text(postContent,style: textTheme.bodyLarge,)
+             Padding(
+               padding:EdgeInsets.symmetric(horizontal: width*0.03),
+               child: Column(
+                 mainAxisAlignment: MainAxisAlignment.start,
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 children: [
+                   Text(title,style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),),
+                   Gap(height*0.01),
+                   Text(postContent,style: textTheme.bodyLarge,textAlign: TextAlign.left,)
+                 ],
+               ),
+             )
             ],
           ),
         ),

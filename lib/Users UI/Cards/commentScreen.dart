@@ -42,22 +42,17 @@ class _CommentScreenState extends State<CommentScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  height: height * 0.05,
-                  decoration: BoxDecoration(
-                      color: black.withOpacity(0.3),
-                      borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          topLeft: Radius.circular(20))),
-                  child: Center(
-                    child: Icon(
-                      Icons.line_weight,
-                      color: white,
-                    ),
+              Container(
+                height: height * 0.05,
+                decoration: BoxDecoration(
+                    color: black.withOpacity(0.3),
+                    borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(20),
+                        topLeft: Radius.circular(20))),
+                child: Center(
+                  child: Icon(
+                    Icons.line_weight,
+                    color: white,
                   ),
                 ),
               ),
