@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:gap/gap.dart';
 import 'package:ncc_apps/Users%20UI/Cards/commentScreen.dart';
 import 'package:ncc_apps/Users%20UI/profile_screen.dart';
@@ -36,6 +37,7 @@ class NewsView extends StatefulWidget {
 }
 
 class _NewsViewState extends State<NewsView> {
+  bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
@@ -148,16 +150,31 @@ class _NewsViewState extends State<NewsView> {
                       constraints: const BoxConstraints(
                         minHeight: 0,
                       ),
-                      child: ReadMoreText(
-                        widget.postContent,
-                        trimLines: 2,
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText: 'Show more',
-                        trimExpandedText: 'Show less',
-                        moreStyle: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold),
-                        lessStyle: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Linkify(
+                            text: widget.postContent,
+                            // Use a ternary operator to show either a truncated or full text
+                            overflow: isExpanded ? null : TextOverflow.ellipsis,
+                            maxLines: isExpanded ? null : 2,
+                          ),
+                            GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isExpanded = !isExpanded;
+                              });
+                            },
+                            child: Text(
+                              isExpanded ? 'Read Less' : '..Read More',
+                              style: TextStyle(
+                                color: black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     widget.image != ''

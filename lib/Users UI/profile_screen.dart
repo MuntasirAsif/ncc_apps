@@ -25,6 +25,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late bool member;
   String photo = '';
   late String url;
   File? image;
@@ -62,7 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 value: 1,
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(
+                    member?Utils().toastMessages('Your are a member of NCC'):Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => NCCMemberRequest(
@@ -142,6 +143,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 departmentController.text = map?['department'];
                 positionController.text = map?['position'];
                 photo = map?['profileImage'];
+                member=(map?['position']!='');
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   fit: BoxFit.cover,
                                                   image: NetworkImage(
                                                       map?['profileImage'])))),
-                                  InkWell(
+                                  widget.uid==uId?InkWell(
                                     onTap: () {
                                       getImageGallery();
                                     },
@@ -189,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           Icons.camera_alt,
                                           color: white,
                                         ))
-                                  )
+                                  ):const SizedBox(),
                                 ],
                               ),
                               Gap(width * 0.02),
@@ -501,11 +503,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   updateProfile() {
-    final User? user = FirebaseAuth.instance.currentUser;
-    final uid = user?.uid;
-    ref2.child(uid.toString()).update({
+    ref2.child(widget.uid.toString()).update({
       'userName': nameController.text.toString(),
-      'id': idController.text.toString()
+      'id': idController.text.toString(),
+      'position': positionController.text.toString()
     }).then((value) {
       Navigator.pop(context);
       Utils().toastMessages('Updated');

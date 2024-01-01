@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:ncc_apps/Auth_Service/info_screen.dart';
 import 'package:ncc_apps/Auth_Service/reset_password.dart';
 import 'package:ncc_apps/Auth_Service/sign_up_screen.dart';
 import 'package:ncc_apps/Auth_Service/verification_screen.dart';
@@ -21,6 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
   bool seePass = true;
+  bool isNewUser=false;
+
+  late GoogleSignInAccount userObj;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -225,7 +230,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Gap(height * 0.02),
                     InkWell(
-                      onTap: () {},
+                      onTap: () async{
+                        User? user= await signInWithGoogle();
+                        if(user!=null){
+                          await navigate(user);
+                        }
+                      },
                       child: Container(
                         padding: EdgeInsets.symmetric(horizontal: width*0.03),
                         width: width*.8,
@@ -282,7 +292,48 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+  navigate(User user)async{
+    isNewUser? await Navigator.push(context, MaterialPageRoute(builder: (context)=>InfoScreen(email: user.email.toString(), name: user.displayName.toString(), image: user.photoURL.toString()))):await Navigator.push(context, MaterialPageRoute(builder: (context)=> const ConfirmScreen()));
+  }
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  Future<User?> signInWithGoogle() async {
+    // Trigger the authentication flow
+    try {
+      // Trigger Google Sign-In
+      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+      if (googleSignInAccount == null) {
+        // User canceled the sign-in process
+        return null;
+      }
 
+      // Obtain GoogleSignInAuthentication
+      final GoogleSignInAuthentication googleSignInAuthentication =
+      await googleSignInAccount.authentication;
+
+      // Create AuthCredential using GoogleSignInAuthentication
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      // Sign in to Firebase with AuthCredential
+      final UserCredential authResult = await _auth.signInWithCredential(credential);
+      final User? user = authResult.user;
+
+      // Check if the user is signing in for the first time
+      if (authResult.additionalUserInfo!.isNewUser) {
+        setState(() {
+          isNewUser=true;
+        });
+      }
+
+      return user;
+    } catch (error) {
+      Utils().toastMessages('Error signing in with Google: $error');
+      return null;
+    }
+  }
   signInWithEmailAndPassword(String emailAddress, String password) {
     try {
       FirebaseAuth.instance

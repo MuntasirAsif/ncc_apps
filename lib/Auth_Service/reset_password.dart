@@ -15,17 +15,40 @@ class ResetPassword extends StatefulWidget {
 
 class _ResetPasswordState extends State<ResetPassword> {
   final emailController = TextEditingController();
+  bool button = true;
+  int countdown = 0;
   @override
   void dispose() {
-    // TODO: implement dispose
     emailController.dispose();
     super.dispose();
   }
-  Future passwordReset() async{
-    try{
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text.trim());
-      Utils().toastMessages('Check Your E-mail.');
-    }on FirebaseAuthException catch(e){
+
+  Future<void> startCountdown() async {
+    for (int i = 30; i > 0; i--) {
+      await Future.delayed(const Duration(seconds: 1));
+      setState(() {
+        countdown = i;
+      });
+    }
+    setState(() {
+      button = true;
+      countdown = 0;
+    });
+  }
+
+  Future<void> passwordReset() async {
+    try {
+      if (button) {
+        await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text.trim());
+        Utils().toastMessages('Check Your E-mail.');
+        setState(() {
+          button = false;
+        });
+        await startCountdown();
+      } else {
+        Utils().toastMessages('Please wait for the countdown period');
+      }
+    } on FirebaseAuthException catch (e) {
       Utils().toastMessages(e.toString());
     }
   }
@@ -88,12 +111,19 @@ class _ResetPasswordState extends State<ResetPassword> {
                     ),
                   ),
                 ),
+                Gap(height * 0.02),
+                Text(
+                  countdown > 0 ? 'Countdown: $countdown seconds' : '',
+                  style: textTheme.bodyLarge!.copyWith(color: red,fontWeight: FontWeight.bold),
+                ),
                 Gap(height * 0.04),
                 InkWell(
-                    onTap: (){
-                      passwordReset();
-                    },
-                    child: const RoundButton(inputText: 'Reset Password')),
+                  onTap: () {
+                    passwordReset();
+                  },
+                  child: const RoundButton(inputText: 'Reset Password'),
+                ),
+
               ],
             ),
           ),

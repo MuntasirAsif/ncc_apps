@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:ncc_apps/Admin%20UI/member_request.dart';
+import 'package:ncc_apps/Admin%20UI/member_view.dart';
 import 'package:ncc_apps/Users%20UI/post_screen.dart';
 import '../Users UI/Cards/achievement_view.dart';
 import '../Utils/colors.dart';
@@ -160,7 +161,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       Gap(height * 0.01),
                       InkWell(
                         onTap: () {
-
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Member()));
                         },
                         child: Container(
                           height: height * 0.09,

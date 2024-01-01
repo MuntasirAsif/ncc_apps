@@ -3,7 +3,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
+import '../Utils/colors.dart';
 import '../Utils/round_button.dart';
+import '../Utils/utils.dart';
 
 class ApplicationView extends StatefulWidget {
   final String uid;
@@ -14,10 +16,15 @@ class ApplicationView extends StatefulWidget {
 }
 
 class _ApplicationViewState extends State<ApplicationView> {
+  TextEditingController positionController = TextEditingController();
   DatabaseReference ref = FirebaseDatabase.instanceFor(
           app: Firebase.app(),
           databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
       .ref("Applications");
+  DatabaseReference ref2 = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
+      .ref("user");
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -444,7 +451,7 @@ class _ApplicationViewState extends State<ApplicationView> {
                                   inputText: 'Remove')),
                           InkWell(
                               onTap: () {
-                  
+                                eidDialog();
                               },
                               child: const RoundButton(
                                   inputText: 'Accept')),
@@ -463,5 +470,83 @@ class _ApplicationViewState extends State<ApplicationView> {
         ),
       ),
     );
+  }
+  eidDialog() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          final height = MediaQuery.of(context).size.height;
+          final width = MediaQuery.of(context).size.width;
+          final textTheme = Theme.of(context).textTheme;
+          return AlertDialog(
+            backgroundColor: white,
+            title: const Text('Edit profile'),
+            content: SizedBox(
+              height: height * 0.4,
+              width: width * 0.8,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: positionController,
+                    decoration: InputDecoration(
+                      labelText: 'Position',
+                      hintText: 'Position',
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                      disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: black),
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Cancel',
+                    style: textTheme.titleSmall!.copyWith(color: red),
+                  )),
+              InkWell(
+                onTap: () {
+                  updateProfile();
+                },
+                child: Container(
+                  height: height * 0.05,
+                  width: width * 0.2,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15), color: black),
+                  child: Center(
+                      child: Text(
+                        'Update',
+                        style: textTheme.titleMedium!.copyWith(color: white),
+                      )),
+                ),
+              )
+            ],
+          );
+        });
+  }
+  updateProfile() {
+    ref2.child(widget.uid.toString()).update({
+      'position': positionController.text.toString()
+    }).then((value) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      ref.child(widget.uid).remove();
+      Utils().toastMessages('Member is Added');
+    }).onError((e, stackTrace) {
+      Utils().toastMessages(e.toString());
+    });
   }
 }
