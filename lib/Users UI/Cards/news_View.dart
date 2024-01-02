@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:gap/gap.dart';
 import 'package:ncc_apps/Users%20UI/Cards/commentScreen.dart';
 import 'package:ncc_apps/Users%20UI/profile_screen.dart';
 import 'package:ncc_apps/Utils/colors.dart';
-import 'package:readmore/readmore.dart';
-
 import '../../Utils/utils.dart';
 
 class NewsView extends StatefulWidget {
@@ -88,8 +87,13 @@ class _NewsViewState extends State<NewsView> {
                       SizedBox(
                         width: width * 0.8,
                         child: InkWell(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileScreen(isAdmin: widget.isAdmin, uid: widget.userId)));
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfileScreen(
+                                        isAdmin: widget.isAdmin,
+                                        uid: widget.userId)));
                           },
                           child: ListTile(
                             leading: Container(
@@ -131,7 +135,23 @@ class _NewsViewState extends State<NewsView> {
                                 ),
                               ],
                             )
-                          : const SizedBox(),
+                          : PopupMenuButton(
+                              icon: const Icon(Icons.more_horiz_outlined),
+                              itemBuilder: (context) => [
+                                PopupMenuItem(
+                                  value: 1,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Utils().toastMessages("You can't access this post");
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Delete',
+                                        style: textTheme.titleSmall!.copyWith(
+                                            fontWeight: FontWeight.w400)),
+                                  ),
+                                ),
+                              ],
+                            ),
                     ],
                   );
                 } else {
@@ -156,11 +176,12 @@ class _NewsViewState extends State<NewsView> {
                         children: [
                           Linkify(
                             text: widget.postContent,
+                            onOpen: (link) => _launchURL(link.url),
                             // Use a ternary operator to show either a truncated or full text
                             overflow: isExpanded ? null : TextOverflow.ellipsis,
                             maxLines: isExpanded ? null : 2,
                           ),
-                            GestureDetector(
+                          GestureDetector(
                             onTap: () {
                               setState(() {
                                 isExpanded = !isExpanded;
@@ -240,6 +261,15 @@ class _NewsViewState extends State<NewsView> {
         ),
       ),
     );
+  }
+  Future<void> _launchURL(dynamic url) async {
+    try {
+      (url.toString());
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error launching URL: $e");
+      }
+    }
   }
 
   showDeleteDialog(DatabaseReference ref2) {

@@ -85,7 +85,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
             child: Center(
               child: StreamBuilder(
                 stream: ref.child(uid.toString()).onValue,
-                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                builder:
+                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                   if (!snapshot.hasData) {
                     return const Center(
                       child: CircularProgressIndicator(),
@@ -94,7 +95,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                     final DataSnapshot data = snapshot.data!.snapshot;
                     final Map<dynamic, dynamic>? map =
                         data.value as Map<dynamic, dynamic>?;
-                    isEditable = ((map?['dept'] == '') || (map?['dept'] == null));
+                    isEditable =
+                        ((map?['dept'] == '') || (map?['dept'] == null));
                     if (isEditable) {
                       return Column(
                         children: [
@@ -226,8 +228,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                             SizedBox(
                                               width: width * 0.08,
                                               child: PopupMenuButton(
-                                                icon: const Icon(
-                                                    Icons.arrow_drop_down_sharp),
+                                                icon: const Icon(Icons
+                                                    .arrow_drop_down_sharp),
                                                 itemBuilder: (context) => [
                                                   PopupMenuItem(
                                                     value: 1,
@@ -235,7 +237,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                       onTap: () {
                                                         setState(() {
                                                           gender = 'Male';
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         });
                                                       },
                                                       child: SizedBox(
@@ -257,7 +260,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                       onTap: () {
                                                         setState(() {
                                                           gender = 'Female';
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         });
                                                       },
                                                       child: SizedBox(
@@ -289,19 +293,19 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                       border: OutlineInputBorder(
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
-                                          BorderRadius.circular(10)),
+                                              BorderRadius.circular(10)),
                                       focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
-                                          BorderRadius.circular(10)),
+                                              BorderRadius.circular(10)),
                                       enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
-                                          BorderRadius.circular(10)),
+                                              BorderRadius.circular(10)),
                                       disabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
-                                          BorderRadius.circular(10)),
+                                              BorderRadius.circular(10)),
                                     ),
                                   ),
                                   Gap(height * 0.01),
@@ -314,10 +318,14 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                         width: width * 0.2,
                                         decoration: BoxDecoration(
                                             border: Border.all(),
-                                            borderRadius: const BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                bottomLeft: Radius.circular(10))),
-                                        child: const Center(child: Text('+880')),
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(10),
+                                                    bottomLeft:
+                                                        Radius.circular(10))),
+                                        child:
+                                            const Center(child: Text('+880')),
                                       ),
                                       SizedBox(
                                         height: height * 0.07,
@@ -335,7 +343,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                         topRight:
                                                             Radius.circular(10),
                                                         bottomRight:
-                                                            Radius.circular(10))),
+                                                            Radius.circular(
+                                                                10))),
                                             focusedBorder: OutlineInputBorder(
                                                 borderSide:
                                                     BorderSide(color: black),
@@ -344,7 +353,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                         topRight:
                                                             Radius.circular(10),
                                                         bottomRight:
-                                                            Radius.circular(10))),
+                                                            Radius.circular(
+                                                                10))),
                                             enabledBorder: OutlineInputBorder(
                                                 borderSide:
                                                     BorderSide(color: black),
@@ -353,7 +363,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                         topRight:
                                                             Radius.circular(10),
                                                         bottomRight:
-                                                            Radius.circular(10))),
+                                                            Radius.circular(
+                                                                10))),
                                             disabledBorder: OutlineInputBorder(
                                                 borderSide:
                                                     BorderSide(color: black),
@@ -362,7 +373,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                         topRight:
                                                             Radius.circular(10),
                                                         bottomRight:
-                                                            Radius.circular(10))),
+                                                            Radius.circular(
+                                                                10))),
                                           ),
                                         ),
                                       ),
@@ -378,7 +390,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                     decoration: BoxDecoration(
                                         color: white.withOpacity(0.4),
                                         border: Border.all(),
-                                        borderRadius: BorderRadius.circular(10)),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
                                     child: Text(widget.dept),
                                   ),
                                   Gap(height * 0.01),
@@ -439,8 +452,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                             SizedBox(
                                               width: width * 0.08,
                                               child: PopupMenuButton(
-                                                icon: const Icon(
-                                                    Icons.arrow_drop_down_sharp),
+                                                icon: const Icon(Icons
+                                                    .arrow_drop_down_sharp),
                                                 itemBuilder: (context) => [
                                                   PopupMenuItem(
                                                     value: 1,
@@ -448,7 +461,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                       onTap: () {
                                                         setState(() {
                                                           section = 'Sec - A';
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         });
                                                       },
                                                       child: SizedBox(
@@ -470,7 +484,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                       onTap: () {
                                                         setState(() {
                                                           section = 'Sec - B';
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         });
                                                       },
                                                       child: SizedBox(
@@ -492,7 +507,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                       onTap: () {
                                                         setState(() {
                                                           section = 'Sec - C';
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         });
                                                       },
                                                       child: SizedBox(
@@ -514,7 +530,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                       onTap: () {
                                                         setState(() {
                                                           section = 'Sec - D';
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         });
                                                       },
                                                       child: SizedBox(
@@ -536,7 +553,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                       onTap: () {
                                                         setState(() {
                                                           section = 'Sec - E';
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         });
                                                       },
                                                       child: SizedBox(
@@ -558,7 +576,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                       onTap: () {
                                                         setState(() {
                                                           section = 'Sec - F';
-                                                          Navigator.pop(context);
+                                                          Navigator.pop(
+                                                              context);
                                                         });
                                                       },
                                                       child: SizedBox(
@@ -636,7 +655,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                       LengthLimitingTextInputFormatter(200),
                                     ],
                                     decoration: InputDecoration(
-                                      hintText: 'About your self (200 Characters)',
+                                      hintText:
+                                          'About your self (200 Characters)',
                                       border: OutlineInputBorder(
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
@@ -655,14 +675,16 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                               BorderRadius.circular(10)),
                                     ),
                                   ),
-                                  Gap(height * 0.01),TextFormField(
+                                  Gap(height * 0.01),
+                                  TextFormField(
                                     maxLines: 3,
                                     controller: goalController,
                                     inputFormatters: [
                                       LengthLimitingTextInputFormatter(200),
                                     ],
                                     decoration: InputDecoration(
-                                      hintText: 'Why do you want to join NCC ? (200 characters)',
+                                      hintText:
+                                          'Why do you want to join NCC ? (200 characters)',
                                       border: OutlineInputBorder(
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
@@ -696,14 +718,14 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                       nameController.text = map?['name'];
                       mailController.text = map?['mail'];
                       section = map?['section'];
-                      ageController.text=map?['age'];
-                      idController.text=map?['id'];
-                      skillController.text=map?['skill'];
-                      gender=map?['gender'];
-                      phoneNumberController.text=map?['number'];
-                      addressController.text=map?['address'];
-                      noteController.text=map?['about'];
-                      goalController.text=map?['reason'];
+                      ageController.text = map?['age'];
+                      idController.text = map?['id'];
+                      skillController.text = map?['skill'];
+                      gender = map?['gender'];
+                      phoneNumberController.text = map?['number'];
+                      addressController.text = map?['address'];
+                      noteController.text = map?['about'];
+                      goalController.text = map?['reason'];
                       return Column(
                         children: [
                           Container(
@@ -777,8 +799,7 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                                             'Name: ',
                                                                         style: textTheme
                                                                             .bodySmall!
-                                                                            .copyWith(
-                                                                                fontWeight: FontWeight.bold)),
+                                                                            .copyWith(fontWeight: FontWeight.bold)),
                                                                     TextSpan(
                                                                         text: map?[
                                                                             'name'],
@@ -807,8 +828,7 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                                             'ID: ',
                                                                         style: textTheme
                                                                             .bodySmall!
-                                                                            .copyWith(
-                                                                                fontWeight: FontWeight.bold)),
+                                                                            .copyWith(fontWeight: FontWeight.bold)),
                                                                     TextSpan(
                                                                         text: map?[
                                                                             'id'],
@@ -837,8 +857,7 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                                             'Section: ',
                                                                         style: textTheme
                                                                             .bodySmall!
-                                                                            .copyWith(
-                                                                                fontWeight: FontWeight.bold)),
+                                                                            .copyWith(fontWeight: FontWeight.bold)),
                                                                     TextSpan(
                                                                         text: map?[
                                                                             'section'],
@@ -867,8 +886,7 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                                             'Department: ',
                                                                         style: textTheme
                                                                             .bodySmall!
-                                                                            .copyWith(
-                                                                                fontWeight: FontWeight.bold)),
+                                                                            .copyWith(fontWeight: FontWeight.bold)),
                                                                     TextSpan(
                                                                         text: map?[
                                                                             'dept'],
@@ -893,7 +911,8 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                                     border: Border
                                                                         .all()),
                                                             child: Image(
-                                                              image: NetworkImage(
+                                                              image:
+                                                                  NetworkImage(
                                                                 map?['Image'],
                                                               ),
                                                               fit: BoxFit.cover,
@@ -903,139 +922,158 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                   ],
                                                 ),
                                                 const Gap(5),
-                                                Center(child: Text("Applicant Detail's",style: textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),)),
+                                                Center(
+                                                    child: Text(
+                                                  "Applicant Detail's",
+                                                  style: textTheme.bodySmall!
+                                                      .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                )),
                                                 const Gap(5),
                                                 Row(
                                                   children: [
                                                     RichText(
-                                                        text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                  text:
-                                                                  'Age: ',
-                                                                  style: textTheme
-                                                                      .bodySmall!
-                                                                      .copyWith(
-                                                                      fontWeight: FontWeight.bold)),
-                                                              TextSpan(
-                                                                  text: map?[
-                                                                  'age'],
-                                                                  style: textTheme
-                                                                      .bodySmall)
-                                                            ])),
+                                                        text:
+                                                            TextSpan(children: [
+                                                      TextSpan(
+                                                          text: 'Age: ',
+                                                          style: textTheme
+                                                              .bodySmall!
+                                                              .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                      TextSpan(
+                                                          text: map?['age'],
+                                                          style: textTheme
+                                                              .bodySmall)
+                                                    ])),
                                                     const Gap(50),
                                                     RichText(
-                                                        text: TextSpan(
-                                                            children: [
-                                                              TextSpan(
-                                                                  text:
-                                                                  'Gender: ',
-                                                                  style: textTheme
-                                                                      .bodySmall!
-                                                                      .copyWith(
-                                                                      fontWeight: FontWeight.bold)),
-                                                              TextSpan(
-                                                                  text: map?[
-                                                                  'gender'],
-                                                                  style: textTheme
-                                                                      .bodySmall)
-                                                            ])),
+                                                        text:
+                                                            TextSpan(children: [
+                                                      TextSpan(
+                                                          text: 'Gender: ',
+                                                          style: textTheme
+                                                              .bodySmall!
+                                                              .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                      TextSpan(
+                                                          text: map?['gender'],
+                                                          style: textTheme
+                                                              .bodySmall)
+                                                    ])),
                                                   ],
                                                 ),
                                                 RichText(
-                                                    text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                              text:
-                                                              'E-mail: ',
-                                                              style: textTheme
-                                                                  .bodySmall!
-                                                                  .copyWith(
-                                                                  fontWeight: FontWeight.bold)),
-                                                          TextSpan(
-                                                              text: map?[
-                                                              'mail'],
-                                                              style: textTheme
-                                                                  .bodySmall)
-                                                        ])),
+                                                    text: TextSpan(children: [
+                                                  TextSpan(
+                                                      text: 'E-mail: ',
+                                                      style: textTheme
+                                                          .bodySmall!
+                                                          .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                  TextSpan(
+                                                      text: map?['mail'],
+                                                      style:
+                                                          textTheme.bodySmall)
+                                                ])),
                                                 RichText(
-                                                    text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                              text:
-                                                              'Mobile Number: ',
-                                                              style: textTheme
-                                                                  .bodySmall!
-                                                                  .copyWith(
-                                                                  fontWeight: FontWeight.bold)),
-                                                          TextSpan(
-                                                              text: '+880${map?['number']}',
-                                                              style: textTheme
-                                                                  .bodySmall)
-                                                        ])),
+                                                    text: TextSpan(children: [
+                                                  TextSpan(
+                                                      text: 'Mobile Number: ',
+                                                      style: textTheme
+                                                          .bodySmall!
+                                                          .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                  TextSpan(
+                                                      text:
+                                                          '+880${map?['number']}',
+                                                      style:
+                                                          textTheme.bodySmall)
+                                                ])),
                                                 RichText(
-                                                    text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                              text:
-                                                              'Address: ',
-                                                              style: textTheme
-                                                                  .bodySmall!
-                                                                  .copyWith(
-                                                                  fontWeight: FontWeight.bold)),
-                                                          TextSpan(
-                                                              text: map?['address'],
-                                                              style: textTheme
-                                                                  .bodySmall)
-                                                        ])),
+                                                    text: TextSpan(children: [
+                                                  TextSpan(
+                                                      text: 'Address: ',
+                                                      style: textTheme
+                                                          .bodySmall!
+                                                          .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                  TextSpan(
+                                                      text: map?['address'],
+                                                      style:
+                                                          textTheme.bodySmall)
+                                                ])),
                                                 const Gap(5),
                                                 const Divider(),
                                                 const Gap(5),
                                                 RichText(
-                                                    text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                              text:
-                                                              "About Applicant's: ",
-                                                              style: textTheme
-                                                                  .bodySmall!
-                                                                  .copyWith(
-                                                                  fontWeight: FontWeight.bold)),
-                                                          TextSpan(
-                                                              text: map?['about'],
-                                                              style: textTheme
-                                                                  .bodySmall)
-                                                        ])),
+                                                    text: TextSpan(children: [
+                                                  TextSpan(
+                                                      text:
+                                                          "About Applicant's: ",
+                                                      style: textTheme
+                                                          .bodySmall!
+                                                          .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                  TextSpan(
+                                                      text: map?['about'],
+                                                      style:
+                                                          textTheme.bodySmall)
+                                                ])),
                                                 const Gap(5),
                                                 const Divider(),
                                                 const Gap(5),
                                                 RichText(
-                                                    text: TextSpan(
-                                                        children: [
-                                                          TextSpan(
-                                                              text:
-                                                              'Reason for joining NCC : ',
-                                                              style: textTheme
-                                                                  .bodySmall!
-                                                                  .copyWith(
-                                                                  fontWeight: FontWeight.bold)),
-                                                          TextSpan(
-                                                              text: map?['reason'],
-                                                              style: textTheme
-                                                                  .bodySmall)
-                                                        ])),
+                                                    text: TextSpan(children: [
+                                                  TextSpan(
+                                                      text:
+                                                          'Reason for joining NCC : ',
+                                                      style: textTheme
+                                                          .bodySmall!
+                                                          .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
+                                                  TextSpan(
+                                                      text: map?['reason'],
+                                                      style:
+                                                          textTheme.bodySmall)
+                                                ])),
                                                 Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
                                                   children: [
                                                     SizedBox(
                                                       height: 100,
                                                       width: 130,
                                                       child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.end,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
                                                         children: [
                                                           const Divider(),
-                                                          Text("Applicant's Signature",style: textTheme.bodySmall,)
+                                                          Text(
+                                                            "Applicant's Signature",
+                                                            style: textTheme
+                                                                .bodySmall,
+                                                          )
                                                         ],
                                                       ),
                                                     ),
@@ -1043,18 +1081,30 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                       height: 100,
                                                       width: 130,
                                                       child: Column(
-                                                        mainAxisAlignment: MainAxisAlignment.end,
-                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
                                                         children: [
                                                           const Divider(),
-                                                          Text("Executive's Signature",style: textTheme.bodySmall,)
+                                                          Text(
+                                                            "Executive's Signature",
+                                                            style: textTheme
+                                                                .bodySmall,
+                                                          )
                                                         ],
                                                       ),
                                                     )
                                                   ],
                                                 ),
                                                 const Gap(20),
-                                                Center(child: Text("This is an auto-generated application by NCC",style: textTheme.labelSmall,))
+                                                Center(
+                                                    child: Text(
+                                                  "This is an auto-generated application by NCC",
+                                                  style: textTheme.labelSmall,
+                                                ))
                                               ],
                                             ),
                                           ),
@@ -1068,28 +1118,25 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                       child: Column(
                                         children: [
                                           RichText(
-                                              text: TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                        text:
-                                                        'Date: ',
-                                                        style: textTheme
-                                                            .labelSmall!.copyWith(fontSize: 8)),
-                                                    TextSpan(
-                                                        text: map?[
-                                                        'date'],
-                                                        style: textTheme
-                                                            .labelSmall!.copyWith(fontSize: 8))
-                                                  ])),
+                                              text: TextSpan(children: [
+                                            TextSpan(
+                                                text: 'Date: ',
+                                                style: textTheme.labelSmall!
+                                                    .copyWith(fontSize: 8)),
+                                            TextSpan(
+                                                text: map?['date'],
+                                                style: textTheme.labelSmall!
+                                                    .copyWith(fontSize: 8))
+                                          ])),
                                         ],
                                       )),
                                 ],
                               ),
                             ),
                           ),
-                          Gap(height*0.01),
+                          Gap(height * 0.01),
                           const Text('You already submit this Application'),
-                          Gap(height*0.01),
+                          Gap(height * 0.01),
                           Container(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -1103,14 +1150,12 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                   child: const RoundButton(
                                       inputText: 'Edit Application')),
                               InkWell(
-                                  onTap: () {
-
-                                  },
+                                  onTap: () {},
                                   child: const RoundButton(
                                       inputText: 'Download PDF')),
                             ],
                           ),
-                          Gap(height*0.01),
+                          Gap(height * 0.01),
                         ],
                       );
                     }
