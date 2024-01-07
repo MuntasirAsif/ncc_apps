@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:ncc_apps/Admin%20UI/member_request.dart';
 import 'package:ncc_apps/Admin%20UI/member_view.dart';
+import 'package:ncc_apps/Full%20View/notification_screen.dart';
 import 'package:ncc_apps/Users%20UI/post_screen.dart';
 import '../Users UI/Cards/achievement_view.dart';
 import '../Utils/colors.dart';
@@ -51,10 +52,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
             )),
         actions: [
           Gap(width * .05),
-          Icon(
-            Icons.notifications,
-            size: 30,
-            color: black,
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>const NotificationScreen(isAdmin: true,)));
+            },
+            child: Icon(
+              Icons.notifications,
+              size: 30,
+              color: black,
+            ),
           ),
           Gap(width * .05),
         ],

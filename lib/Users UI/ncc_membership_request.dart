@@ -215,72 +215,70 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                             border: Border.all(),
                                             borderRadius:
                                                 BorderRadius.circular(10)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: width * 0.30,
-                                              child: Text(gender),
-                                            ),
-                                            SizedBox(
-                                              width: width * 0.08,
-                                              child: PopupMenuButton(
-                                                icon: const Icon(Icons
+                                        child: SizedBox(
+                                          width: width * 0.08,
+                                          child: PopupMenuButton(
+                                            icon: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: width * 0.30,
+                                                  child: Text(gender),
+                                                ),
+                                                const Icon(Icons
                                                     .arrow_drop_down_sharp),
-                                                itemBuilder: (context) => [
-                                                  PopupMenuItem(
-                                                    value: 1,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          gender = 'Male';
-                                                          Navigator.pop(
-                                                              context);
-                                                        });
-                                                      },
-                                                      child: SizedBox(
-                                                        height: height * 0.04,
-                                                        width: width * 0.2,
-                                                        child: Text('Male',
-                                                            style: textTheme
-                                                                .titleSmall!
-                                                                .copyWith(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400)),
-                                                      ),
-                                                    ),
+                                              ],
+                                            ),
+                                            itemBuilder: (context) => [
+                                              PopupMenuItem(
+                                                value: 1,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      gender = 'Male';
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  child: SizedBox(
+                                                    height: height * 0.04,
+                                                    width: width * 0.3,
+                                                    child: Text('Male',
+                                                        style: textTheme
+                                                            .titleSmall!
+                                                            .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
                                                   ),
-                                                  PopupMenuItem(
-                                                    value: 1,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          gender = 'Female';
-                                                          Navigator.pop(
-                                                              context);
-                                                        });
-                                                      },
-                                                      child: SizedBox(
-                                                        height: height * 0.04,
-                                                        width: width * 0.2,
-                                                        child: Text('Female',
-                                                            style: textTheme
-                                                                .titleSmall!
-                                                                .copyWith(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                ),
                                               ),
-                                            )
-                                          ],
+                                              PopupMenuItem(
+                                                value: 1,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      gender = 'Female';
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  child: SizedBox(
+                                                    height: height * 0.04,
+                                                    width: width * 0.3,
+                                                    child: Text('Female',
+                                                        style: textTheme
+                                                            .titleSmall!
+                                                            .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -439,164 +437,157 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                             border: Border.all(),
                                             borderRadius:
                                                 BorderRadius.circular(10)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: width * 0.30,
-                                              child: Text(section),
-                                            ),
-                                            SizedBox(
-                                              width: width * 0.08,
-                                              child: PopupMenuButton(
-                                                icon: const Icon(Icons
+                                        child: SizedBox(
+                                          child: PopupMenuButton(
+                                            icon: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: width * 0.28,
+                                                  child: Text(section),
+                                                ),
+                                                const Icon(Icons
                                                     .arrow_drop_down_sharp),
-                                                itemBuilder: (context) => [
-                                                  PopupMenuItem(
-                                                    value: 1,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          section = 'Sec - A';
-                                                          Navigator.pop(
-                                                              context);
-                                                        });
-                                                      },
-                                                      child: SizedBox(
-                                                        height: height * 0.04,
-                                                        width: width * 0.1,
-                                                        child: Text('A',
-                                                            style: textTheme
-                                                                .titleSmall!
-                                                                .copyWith(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400)),
-                                                      ),
-                                                    ),
+                                              ],
+                                            ),
+                                            itemBuilder: (context) => [
+                                              PopupMenuItem(
+                                                value: 1,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      section = 'Sec - A';
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  child: SizedBox(
+                                                    height: height * 0.04,
+                                                    width: width * 0.1,
+                                                    child: Text('A',
+                                                        style: textTheme
+                                                            .titleSmall!
+                                                            .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
                                                   ),
-                                                  PopupMenuItem(
-                                                    value: 1,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          section = 'Sec - B';
-                                                          Navigator.pop(
-                                                              context);
-                                                        });
-                                                      },
-                                                      child: SizedBox(
-                                                        height: height * 0.04,
-                                                        width: width * 0.1,
-                                                        child: Text('B',
-                                                            style: textTheme
-                                                                .titleSmall!
-                                                                .copyWith(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  PopupMenuItem(
-                                                    value: 1,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          section = 'Sec - C';
-                                                          Navigator.pop(
-                                                              context);
-                                                        });
-                                                      },
-                                                      child: SizedBox(
-                                                        height: height * 0.04,
-                                                        width: width * 0.1,
-                                                        child: Text('C',
-                                                            style: textTheme
-                                                                .titleSmall!
-                                                                .copyWith(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  PopupMenuItem(
-                                                    value: 1,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          section = 'Sec - D';
-                                                          Navigator.pop(
-                                                              context);
-                                                        });
-                                                      },
-                                                      child: SizedBox(
-                                                        height: height * 0.04,
-                                                        width: width * 0.1,
-                                                        child: Text('D',
-                                                            style: textTheme
-                                                                .titleSmall!
-                                                                .copyWith(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  PopupMenuItem(
-                                                    value: 1,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          section = 'Sec - E';
-                                                          Navigator.pop(
-                                                              context);
-                                                        });
-                                                      },
-                                                      child: SizedBox(
-                                                        height: height * 0.04,
-                                                        width: width * 0.1,
-                                                        child: Text('E',
-                                                            style: textTheme
-                                                                .titleSmall!
-                                                                .copyWith(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  PopupMenuItem(
-                                                    value: 1,
-                                                    child: InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          section = 'Sec - F';
-                                                          Navigator.pop(
-                                                              context);
-                                                        });
-                                                      },
-                                                      child: SizedBox(
-                                                        height: height * 0.04,
-                                                        width: width * 0.1,
-                                                        child: Text('F',
-                                                            style: textTheme
-                                                                .titleSmall!
-                                                                .copyWith(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w400)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                ),
                                               ),
-                                            )
-                                          ],
+                                              PopupMenuItem(
+                                                value: 1,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      section = 'Sec - B';
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  child: SizedBox(
+                                                    height: height * 0.04,
+                                                    width: width * 0.1,
+                                                    child: Text('B',
+                                                        style: textTheme
+                                                            .titleSmall!
+                                                            .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                                  ),
+                                                ),
+                                              ),
+                                              PopupMenuItem(
+                                                value: 1,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      section = 'Sec - C';
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  child: SizedBox(
+                                                    height: height * 0.04,
+                                                    width: width * 0.1,
+                                                    child: Text('C',
+                                                        style: textTheme
+                                                            .titleSmall!
+                                                            .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                                  ),
+                                                ),
+                                              ),
+                                              PopupMenuItem(
+                                                value: 1,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      section = 'Sec - D';
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  child: SizedBox(
+                                                    height: height * 0.04,
+                                                    width: width * 0.1,
+                                                    child: Text('D',
+                                                        style: textTheme
+                                                            .titleSmall!
+                                                            .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                                  ),
+                                                ),
+                                              ),
+                                              PopupMenuItem(
+                                                value: 1,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      section = 'Sec - E';
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  child: SizedBox(
+                                                    height: height * 0.04,
+                                                    width: width * 0.1,
+                                                    child: Text('E',
+                                                        style: textTheme
+                                                            .titleSmall!
+                                                            .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                                  ),
+                                                ),
+                                              ),
+                                              PopupMenuItem(
+                                                value: 1,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      section = 'Sec - F';
+                                                      Navigator.pop(context);
+                                                    });
+                                                  },
+                                                  child: SizedBox(
+                                                    height: height * 0.04,
+                                                    width: width * 0.1,
+                                                    child: Text('F',
+                                                        style: textTheme
+                                                            .titleSmall!
+                                                            .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ],

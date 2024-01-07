@@ -1,14 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ncc_apps/Utils/colors.dart';
 import 'package:ncc_apps/Utils/round_button.dart';
 import '../Utils/utils.dart';
+import '../notifications_services.dart';
+import 'package:http/http.dart' as http;
 
 class PostScreen extends StatefulWidget {
   final bool isAdmin;
@@ -19,6 +24,7 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
+  NotificationServices notificationServices = NotificationServices();
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   bool addAchievement = false;
@@ -29,7 +35,7 @@ class _PostScreenState extends State<PostScreen> {
   late final postController = TextEditingController();
   late final rankController = TextEditingController();
   late final titleController = TextEditingController();
-
+  String token = '';
   Future getImageGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     setState(() {
@@ -63,10 +69,12 @@ class _PostScreenState extends State<PostScreen> {
       'Time': DateTime.now().toString(),
       'userId': uid,
       'postContent': postController.text.toString(),
+      'token': token,
     }).then((value) {
       if (addAchievement) {
         addAchievementPost(url);
       } else {
+        subscribeToNotificationTopic('New Post',postController.text.toString(),'post');
         Navigator.pop(context);
       }
       Utils().toastMessages('Post added Successfully');
@@ -83,6 +91,7 @@ class _PostScreenState extends State<PostScreen> {
       'postContent': postController.text.toString(),
       'title': titleController.text.toString(),
     }).then((value) {
+      subscribeToNotificationTopic('New Achievement',postController.text.toString(),'Achievement');
       Navigator.pop(context);
       Utils().toastMessages('Also added Achievement');
     }).onError((error, stackTrace) {
@@ -98,11 +107,21 @@ class _PostScreenState extends State<PostScreen> {
           app: Firebase.app(),
           databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
       .ref("Achievement");
+  DatabaseReference ref3 = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
+      .ref("Device");
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final textTheme = Theme.of(context).textTheme;
+    notificationServices.getDeviceToken().then((value) {
+      setState(() {
+        token = value.toString();
+      });
+    });
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: white,
@@ -364,7 +383,7 @@ class _PostScreenState extends State<PostScreen> {
                                 uploadPic(_image!);
                               } else {
                                 Utils().toastMessages(
-                                    'You Have Add Image for Achievement');
+                                    'You have to Add Image for Achievement');
                               }
                             }
                           } else if (_formKey2.currentState!.validate()) {
@@ -378,5 +397,47 @@ class _PostScreenState extends State<PostScreen> {
         ),
       ),
     );
+  }
+  void subscribeToNotificationTopic(String title,String body,String type) async {
+    try {
+      await FirebaseMessaging.instance.subscribeToTopic('all_users');
+      sendNotificationToAllUsers(title,body,type);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error subscribing to the "all_users" topic: $e');
+      }
+    }
+  }
+  Future<void> sendNotificationToAllUsers(String title, String body,String type) async {
+    var data = {
+      'to': '/topics/all_users',
+      'priority': 'high',
+      'notification': {
+        'title': title,
+        'body': body,
+      },
+      'data':{
+        'type': type,
+        'id' : postKey
+      }
+    };
+
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        body: jsonEncode(data),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'key=AAAA0btYFoE:APA91bHKoncgrtKxzGpfG7a-7iLZ-_icwj2ttzA0jEpUZuaFvNN2Xry2uP81Vf7a6iKk4V-4A4zs3is8EaRtci264zTuEkQHmIRVQcse3lf6_ruuB7se26Hhse21mMq2brAi2DGWS7Uo',
+        },
+      );
+      if (kDebugMode) {
+        print('Notification sent to all users');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error sending notification to all users: $e');
+      }
+    }
   }
 }

@@ -24,11 +24,19 @@ class _NewsFeedState extends State<NewsFeed> {
       .ref("post");
   @override
   Widget build(BuildContext context) {
-    final User? user =
-        FirebaseAuth.instance.currentUser;
+    final User? user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    Size screenSize = MediaQuery.of(context).size;
+    EdgeInsets padding = MediaQuery.of(context).padding;
+    double appBarHeight = AppBar().preferredSize.height;
+    double bottomNavigationBarHeight = kBottomNavigationBarHeight;
+    double availableHeight = screenSize.height -
+        padding.vertical -
+        appBarHeight -
+        bottomNavigationBarHeight -
+        5;
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
@@ -50,7 +58,7 @@ class _NewsFeedState extends State<NewsFeed> {
           child: Column(
             children: [
               SizedBox(
-                height: height*0.80,
+                height: availableHeight,
                 width: width,
                 child: FirebaseAnimatedList(
                     query: ref,
@@ -61,12 +69,14 @@ class _NewsFeedState extends State<NewsFeed> {
                       return NewsView(
                         time: snapshot.child('Time').value.toString(),
                         image: snapshot.child('image').value.toString(),
-                        postContent: snapshot.child('postContent').value.toString(),
+                        postContent:
+                            snapshot.child('postContent').value.toString(),
                         userId: snapshot.child('userId').value.toString(),
                         postKey: snapshot.child('postKey').value.toString(),
                         like: snapshot.child('like').children.indexed.length.toString(),
                         isLiked: snapshot.child('like').child(uid!).exists,
                         isAdmin: widget.isAdmin,
+                        token: snapshot.child('token').value.toString(),
                       );
                     }),
               ),
@@ -76,8 +86,12 @@ class _NewsFeedState extends State<NewsFeed> {
       ),
       floatingActionButton: InkWell(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => PostScreen(isAdmin: widget.isAdmin,)));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PostScreen(
+                        isAdmin: widget.isAdmin,
+                      )));
         },
         child: Container(
           height: height * 0.05,

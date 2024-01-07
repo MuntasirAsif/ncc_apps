@@ -32,10 +32,10 @@ class _InfoScreenState extends State<InfoScreen> {
   Widget build(BuildContext context) {
     nameController.text=widget.name;
     email=widget.email;
+    backUserInfo();
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
       body: Container(
         height: height,
@@ -165,8 +165,10 @@ class _InfoScreenState extends State<InfoScreen> {
                   Gap(height * 0.1),
                   InkWell(
                       onTap: () {
-                        if (_formKey.currentState!.validate() && selectedDept != "") {
+                        if (selectedDept!=""&&_formKey.currentState!.validate()) {
                           addUserInfo();
+                        }else{
+                          Utils().toastMessages('Please enter your details');
                         }
                       },
                       child: const RoundButton(
@@ -203,11 +205,28 @@ class _InfoScreenState extends State<InfoScreen> {
       ),
     );
   }
-  Future<void> addUserInfo() async {
+  Future<void> backUserInfo() async {
     final User? user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
     ref.child(uid!).set({
-      'profileImage': '',
+      'profileImage': widget.image.toString(),
+      'userType': 'User',
+      'uid' : uid,
+      'userName': nameController.text.toString(),
+      'email': email.toString(),
+      'batch': '',
+      'department': "",
+      'id' : '',
+      'position' : '',
+    }).onError((error, stackTrace) {
+      Utils().toastMessages(error.toString());
+    });
+  }
+  Future<void> addUserInfo() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
+    ref.child(uid!).update({
+      'profileImage': widget.image.toString(),
       'userType': 'User',
       'uid' : uid,
       'userName': nameController.text.toString(),

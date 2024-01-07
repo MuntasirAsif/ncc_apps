@@ -17,6 +17,7 @@ class NewsView extends StatefulWidget {
   final String postContent;
   final String userId;
   final String postKey;
+  final String token;
   final String like;
   final bool isLiked;
   const NewsView({
@@ -29,6 +30,7 @@ class NewsView extends StatefulWidget {
     required this.like,
     required this.isLiked,
     required this.isAdmin,
+    required this.token,
   }) : super(key: key);
 
   @override
@@ -142,7 +144,8 @@ class _NewsViewState extends State<NewsView> {
                                   value: 1,
                                   child: InkWell(
                                     onTap: () {
-                                      Utils().toastMessages("You can't access this post");
+                                      Utils().toastMessages(
+                                          "You can't access this post");
                                       Navigator.pop(context);
                                     },
                                     child: Text('Delete',
@@ -246,7 +249,9 @@ class _NewsViewState extends State<NewsView> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return CommentScreen(
-                                        postKey: widget.postKey);
+                                      postKey: widget.postKey,
+                                      token: widget.token,
+                                    );
                                   });
                             },
                             child: const Icon(Icons.mode_comment)),
@@ -262,6 +267,7 @@ class _NewsViewState extends State<NewsView> {
       ),
     );
   }
+
   Future<void> _launchURL(dynamic url) async {
     try {
       (url.toString());

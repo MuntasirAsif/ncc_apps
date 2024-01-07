@@ -18,7 +18,8 @@ import '../Utils/utils.dart';
 class ProfileScreen extends StatefulWidget {
   final bool isAdmin;
   final String uid;
-  const ProfileScreen({Key? key, required this.isAdmin, required this.uid}) : super(key: key);
+  const ProfileScreen({Key? key, required this.isAdmin, required this.uid})
+      : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -30,6 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late String url;
   File? image;
   final picker = ImagePicker();
+  bool fill = false;
   TextEditingController nameController = TextEditingController();
   TextEditingController idController = TextEditingController();
   TextEditingController departmentController = TextEditingController();
@@ -56,68 +58,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text('Profile',
             style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold)),
         actions: [
-          uId.toString()==widget.uid?PopupMenuButton(
-            icon: const Icon(Icons.more_horiz_outlined),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 1,
-                child: InkWell(
-                  onTap: () {
-                    member?Utils().toastMessages('Your are a member of NCC'):Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => NCCMemberRequest(
-                                  photo: photo,
-                                  name: nameController.text,
-                                  dept: departmentController.text,
-                                  id: idController.text,
-                                  position: positionController.text,
-                                )));
-                  },
-                  child: SizedBox(
-                    height: height * 0.04,
-                    width: width * 0.3,
-                    child: Text('NCC Membership',
-                        style: textTheme.titleSmall!
-                            .copyWith(fontWeight: FontWeight.w400)),
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: 1,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ResetPassword()));
-                  },
-                  child: SizedBox(
-                    height: height * 0.04,
-                    width: width * 0.3,
-                    child: Text('Change password',
-                        style: textTheme.titleSmall!
-                            .copyWith(fontWeight: FontWeight.w400)),
-                  ),
-                ),
-              ),
-              PopupMenuItem(
-                value: 1,
-                child: InkWell(
-                  onTap: () {
-                    logOut();
-                  },
-                  child: SizedBox(
-                    height: height * 0.04,
-                    width: width * 0.3,
-                    child: Text('Log out',
-                        style: textTheme.titleSmall!
-                            .copyWith(fontWeight: FontWeight.w400)),
-                  ),
-                ),
-              ),
-            ],
-          ):const SizedBox(),
+          uId.toString() == widget.uid
+              ? PopupMenuButton(
+                  icon: const Icon(Icons.more_horiz_outlined),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: 1,
+                      child: InkWell(
+                        onTap: () {
+                          member
+                              ? Utils()
+                                  .toastMessages('Your are a member of NCC')
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NCCMemberRequest(
+                                            photo: photo,
+                                            name: nameController.text,
+                                            dept: departmentController.text,
+                                            id: idController.text,
+                                            position: positionController.text,
+                                          )));
+                        },
+                        child: SizedBox(
+                          height: height * 0.04,
+                          width: width * 0.3,
+                          child: Text('NCC Membership',
+                              style: textTheme.titleSmall!
+                                  .copyWith(fontWeight: FontWeight.w400)),
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 1,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ResetPassword()));
+                        },
+                        child: SizedBox(
+                          height: height * 0.04,
+                          width: width * 0.3,
+                          child: Text('Change password',
+                              style: textTheme.titleSmall!
+                                  .copyWith(fontWeight: FontWeight.w400)),
+                        ),
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: 1,
+                      child: InkWell(
+                        onTap: () {
+                          logOut();
+                        },
+                        child: SizedBox(
+                          height: height * 0.04,
+                          width: width * 0.3,
+                          child: Text('Log out',
+                              style: textTheme.titleSmall!
+                                  .copyWith(fontWeight: FontWeight.w400)),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              : const SizedBox(),
           Gap(width * 0.03),
         ],
       ),
@@ -143,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 departmentController.text = map?['department'];
                 positionController.text = map?['position'];
                 photo = map?['profileImage'];
-                member=(map?['position']!='');
+                member = (map?['position'] != '');
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,18 +187,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   fit: BoxFit.cover,
                                                   image: NetworkImage(
                                                       map?['profileImage'])))),
-                                  widget.uid==uId?InkWell(
-                                    onTap: () {
-                                      getImageGallery();
-                                    },
-                                    child: CircleAvatar(
-                                        radius: 18,
-                                        backgroundColor: black.withOpacity(0.7),
-                                        child: Icon(
-                                          Icons.camera_alt,
-                                          color: white,
-                                        ))
-                                  ):const SizedBox(),
+                                  widget.uid == uId
+                                      ? InkWell(
+                                          onTap: () {
+                                            getImageGallery();
+                                          },
+                                          child: CircleAvatar(
+                                              radius: 18,
+                                              backgroundColor:
+                                                  black.withOpacity(0.7),
+                                              child: Icon(
+                                                Icons.camera_alt,
+                                                color: white,
+                                              )))
+                                      : const SizedBox(),
                                 ],
                               ),
                               Gap(width * 0.02),
@@ -236,33 +245,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                                   ),
-                                  widget.isAdmin||(uId.toString()==widget.uid)? Positioned(
-                                      right: 4,
-                                      bottom: 4,
-                                      child: InkWell(
-                                        onTap: () {
-                                          eidDialog();
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  Colors.black.withOpacity(0.2),
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          child: const Row(
-                                            children: [
-                                              Gap(2),
-                                              Icon(
-                                                Icons.edit,
-                                                size: 15,
+                                  widget.isAdmin ||
+                                          (uId.toString() == widget.uid)
+                                      ? Positioned(
+                                          right: 4,
+                                          bottom: 4,
+                                          child: InkWell(
+                                            onTap: () {
+                                              eidDialog();
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.black
+                                                      .withOpacity(0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: const Row(
+                                                children: [
+                                                  Gap(2),
+                                                  Icon(
+                                                    Icons.edit,
+                                                    size: 15,
+                                                  ),
+                                                  Gap(2),
+                                                  Text("Edit"),
+                                                  Gap(2)
+                                                ],
                                               ),
-                                              Gap(2),
-                                              Text("Edit"),
-                                              Gap(2)
-                                            ],
-                                          ),
-                                        ),
-                                      )):const SizedBox(),
+                                            ),
+                                          ))
+                                      : const SizedBox(),
                                 ],
                               )
                             ],
@@ -319,7 +331,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                       child: SizedBox(
-                        height: height * 0.52,
+                        height: height * 0.62-kBottomNavigationBarHeight,
                         child: FirebaseAnimatedList(
                             scrollDirection: Axis.vertical,
                             query: ref,
@@ -362,7 +374,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             isLiked: snapshot
                                                 .child('like')
                                                 .child(widget.uid)
-                                                .exists, isAdmin: widget.isAdmin,
+                                                .exists,
+                                            isAdmin: widget.isAdmin,
+                                            token: snapshot
+                                                .child('token')
+                                                .value
+                                                .toString(),
                                           )
                                         : const SizedBox(),
                               );
@@ -381,6 +398,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  var selectedDept = "";
   eidDialog() {
     return showDialog(
         context: context,
@@ -391,73 +409,103 @@ class _ProfileScreenState extends State<ProfileScreen> {
           return AlertDialog(
             backgroundColor: white,
             title: const Text('Edit profile'),
-            content: SizedBox(
-              height: height * 0.4,
-              width: width * 0.8,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Name',
-                      hintText: 'Name',
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
-                      disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
+            content: SingleChildScrollView(
+              child: SizedBox(
+                height: height * 0.4,
+                width: width * 0.8,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        hintText: 'Name',
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: black),
+                            borderRadius: BorderRadius.circular(20)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: black),
+                            borderRadius: BorderRadius.circular(20)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: black),
+                            borderRadius: BorderRadius.circular(20)),
+                        disabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: black),
+                            borderRadius: BorderRadius.circular(20)),
+                      ),
                     ),
-                  ),
-                  Gap(height * 0.02),
-                  TextFormField(
-                    controller: idController,
-                    decoration: InputDecoration(
-                      labelText: 'ID',
-                      hintText: 'ID',
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
-                      disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
+                    Gap(height * 0.02),
+                    TextFormField(
+                      controller: idController,
+                      decoration: InputDecoration(
+                        labelText: 'ID',
+                        hintText: 'ID',
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: black),
+                            borderRadius: BorderRadius.circular(20)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: black),
+                            borderRadius: BorderRadius.circular(20)),
+                        enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: black),
+                            borderRadius: BorderRadius.circular(20)),
+                        disabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: black),
+                            borderRadius: BorderRadius.circular(20)),
+                      ),
                     ),
-                  ),
-                  Gap(height * 0.02),
-                  widget.isAdmin
-                      ? TextFormField(
-                          controller: positionController,
-                          decoration: InputDecoration(
-                            labelText: 'Position',
-                            hintText: 'Position',
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: black),
-                                borderRadius: BorderRadius.circular(20)),
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: black),
-                                borderRadius: BorderRadius.circular(20)),
-                            enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: black),
-                                borderRadius: BorderRadius.circular(20)),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: black),
-                                borderRadius: BorderRadius.circular(20)),
-                          ),
-                        )
-                      : const SizedBox(),
-                ],
+                    Gap(height * 0.02),
+                    widget.isAdmin
+                        ? TextFormField(
+                            controller: positionController,
+                            decoration: InputDecoration(
+                              labelText: 'Position',
+                              hintText: 'Position',
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: black),
+                                  borderRadius: BorderRadius.circular(20)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: black),
+                                  borderRadius: BorderRadius.circular(20)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: black),
+                                  borderRadius: BorderRadius.circular(20)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: black),
+                                  borderRadius: BorderRadius.circular(20)),
+                            ),
+                          )
+                        : const SizedBox(),
+                    Gap(height * 0.02),
+                    InkWell(
+                      onTap: () {
+                        showDepartmentDialog();
+                      },
+                      child: Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Row(
+                          children: [
+                            const Gap(10),
+                            const Icon(Icons.home_work_outlined),
+                            const Gap(10),
+                            SizedBox(
+                              width: width * 0.50,
+                              child: Text(
+                                selectedDept == ""
+                                    ? 'Select Department'
+                                    : selectedDept,
+                                style: textTheme.bodyLarge,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             actions: [
@@ -471,7 +519,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   )),
               InkWell(
                 onTap: () {
-                  updateProfile();
+                  if(nameController.text.toString().length>=3){
+                    updateProfile();
+                  }else{
+                    Utils().toastMessages('Name is required at list 3 letters');
+                  }
                 },
                 child: Container(
                   height: height * 0.05,
@@ -506,13 +558,127 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ref2.child(widget.uid.toString()).update({
       'userName': nameController.text.toString(),
       'id': idController.text.toString(),
-      'position': positionController.text.toString()
+      'position': positionController.text.toString(),
+      'department': selectedDept.toString()
     }).then((value) {
       Navigator.pop(context);
       Utils().toastMessages('Updated');
     }).onError((e, stackTrace) {
       Utils().toastMessages(e.toString());
     });
+  }
+
+  showDepartmentDialog() {
+    final height = MediaQuery.of(context).size.height;
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Row(
+              children: [
+                Icon(
+                  Icons.home_work_outlined,
+                ),
+                Gap(10),
+                SizedBox(child: Text('Select Department'))
+              ],
+            ),
+            content: SizedBox(
+              height: height * 0.5,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedDept = "Teacher";
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: const ListTile(
+                        leading: Icon(Icons.person),
+                        title: Text('A Teacher'),
+                      ),
+                    ),
+                    InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedDept =
+                                "Computer Science & Engineering-(CSE)";
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: const ListTile(
+                          leading: Icon(Icons.computer),
+                          title: Text('Computer Science & Engineering-(CSE)'),
+                        )),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedDept =
+                              "Electrical & Electronics Engineering-(EEE)";
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: const ListTile(
+                        leading: Icon(Icons.electrical_services),
+                        title:
+                            Text('Electrical & Electronics Engineering-(EEE)'),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedDept = "Textile Engineering-(TE)";
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: const ListTile(
+                        leading: Icon(Icons.paragliding),
+                        title: Text('Textile Engineering-(TE)'),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedDept =
+                              "Industrial & Production Engineering-(IPE)";
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: const ListTile(
+                        leading: Icon(Icons.production_quantity_limits),
+                        title:
+                            Text('Industrial & Production Engineering-(IPE)'),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedDept =
+                              "Fashion Design & Apparel Engineering-(FDAE)";
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: const ListTile(
+                        leading: Icon(Icons.color_lens),
+                        title:
+                            Text('Fashion Design & Apparel Engineering-(FDAE)'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel')),
+            ],
+          );
+        });
   }
 
   Future getImageGallery() async {

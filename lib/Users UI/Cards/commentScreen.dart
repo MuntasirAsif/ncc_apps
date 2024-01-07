@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -11,7 +14,8 @@ import '../../Utils/utils.dart';
 
 class CommentScreen extends StatefulWidget {
   final String postKey;
-  const CommentScreen({Key? key, required this.postKey}) : super(key: key);
+  final String token;
+  const CommentScreen({Key? key, required this.postKey, required this.token}) : super(key: key);
 
   @override
   State<CommentScreen> createState() => _CommentScreenState();
@@ -19,6 +23,7 @@ class CommentScreen extends StatefulWidget {
 
 class _CommentScreenState extends State<CommentScreen> {
   TextEditingController commentController = TextEditingController();
+  String body='';
   DatabaseReference ref = FirebaseDatabase.instanceFor(
           app: Firebase.app(),
           databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
@@ -143,6 +148,9 @@ class _CommentScreenState extends State<CommentScreen> {
   void addComment() {
     final User? user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
+    setState(() {
+      body = commentController.text.toString();
+    });
     try {
       ref2
           .child(widget.postKey)
@@ -154,10 +162,43 @@ class _CommentScreenState extends State<CommentScreen> {
           'uid': uid,
         },
       ).then((value) {
+        sendNotificationToAllUsers('Commented on your post',body,'comment');
         Utils().toastMessages('Comment Added');
       });
     } catch (e) {
       Utils().toastMessages(e.toString());
+    }
+  }
+  Future<void> sendNotificationToAllUsers(String title, String body,String type) async {
+    var data = {
+      'to': widget.token,
+      'priority': 'high',
+      'notification': {
+        'title': title,
+        'body': body,
+      },
+      'data':{
+        'type': type,
+        'id' : DateTime.now().microsecondsSinceEpoch.toString()
+      }
+    };
+
+    try {
+      await http.post(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        body: jsonEncode(data),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'key=AAAA0btYFoE:APA91bHKoncgrtKxzGpfG7a-7iLZ-_icwj2ttzA0jEpUZuaFvNN2Xry2uP81Vf7a6iKk4V-4A4zs3is8EaRtci264zTuEkQHmIRVQcse3lf6_ruuB7se26Hhse21mMq2brAi2DGWS7Uo',
+        },
+      );
+      if (kDebugMode) {
+        print('Notification sent to all users');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error sending notification to all users: $e');
+      }
     }
   }
 }
