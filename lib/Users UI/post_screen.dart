@@ -28,6 +28,7 @@ class _PostScreenState extends State<PostScreen> {
   final _formKey = GlobalKey<FormState>();
   final _formKey2 = GlobalKey<FormState>();
   bool addAchievement = false;
+  bool addCode = false;
   late String url;
   File? _image;
   final picker = ImagePicker();
@@ -35,6 +36,7 @@ class _PostScreenState extends State<PostScreen> {
   late final postController = TextEditingController();
   late final rankController = TextEditingController();
   late final titleController = TextEditingController();
+  late final codeController = TextEditingController();
   String token = '';
   Future getImageGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -66,6 +68,7 @@ class _PostScreenState extends State<PostScreen> {
     ref.child(postKey).set({
       'image': url,
       'postKey': postKey,
+      'code': codeController.text.toString(),
       'Time': DateTime.now().toString(),
       'userId': uid,
       'postContent': postController.text.toString(),
@@ -175,8 +178,12 @@ class _PostScreenState extends State<PostScreen> {
                                             InkWell(
                                               onTap: () {
                                                 setState(() {
-                                                  postController.text =
-                                                      "${postController.text}''''\n//Write your Code\n\n''''";
+                                                  if(addCode){
+                                                    codeController.text = '';
+                                                    addCode=false;
+                                                  }else{
+                                                    addCode =true;
+                                                  }
                                                 });
                                               },
                                               child: Text(
@@ -243,6 +250,46 @@ class _PostScreenState extends State<PostScreen> {
                                   ],
                                 ),
                               ),
+                              addCode? ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                minHeight: 10,
+                              ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all()
+                                  ),
+                                  child: TextFormField(
+                                  controller: codeController,
+                                  maxLines: 15,
+                                  minLines: 3,
+                                  keyboardType: TextInputType.multiline,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Write Your Code';
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    hintText: 'Write Your Code here',
+                                    border: OutlineInputBorder(
+                                      borderSide:
+                                      BorderSide(color: bgGreen),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: black),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                      BorderSide(color: bgGreen),
+                                    ),
+                                    disabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: black),
+                                    ),
+                                  ),
+                                                                ),
+                                ),
+                              ):const SizedBox(),
                               Gap(height * 0.0),
                               const Text(
                                   "* If you want to add code write ''''  //code  '''' or click on <Add_Code>."),

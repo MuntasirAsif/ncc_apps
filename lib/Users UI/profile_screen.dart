@@ -331,7 +331,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                       child: SizedBox(
-                        height: height * 0.62-kBottomNavigationBarHeight,
+                        height: height * 0.62 - kBottomNavigationBarHeight,
                         child: FirebaseAnimatedList(
                             scrollDirection: Axis.vertical,
                             query: ref,
@@ -378,6 +378,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             isAdmin: widget.isAdmin,
                                             token: snapshot
                                                 .child('token')
+                                                .value
+                                                .toString(),
+                                            code: snapshot
+                                                .child('code')
                                                 .value
                                                 .toString(),
                                           )
@@ -519,9 +523,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   )),
               InkWell(
                 onTap: () {
-                  if(nameController.text.toString().length>=3){
+                  if (nameController.text.toString().length >= 3) {
                     updateProfile();
-                  }else{
+                  } else {
                     Utils().toastMessages('Name is required at list 3 letters');
                   }
                 },

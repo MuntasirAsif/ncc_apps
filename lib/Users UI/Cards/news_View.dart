@@ -3,11 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ncc_apps/Users%20UI/Cards/commentScreen.dart';
 import 'package:ncc_apps/Users%20UI/profile_screen.dart';
 import 'package:ncc_apps/Utils/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/utils.dart';
 
 class NewsView extends StatefulWidget {
@@ -15,6 +18,7 @@ class NewsView extends StatefulWidget {
   final bool isAdmin;
   final String image;
   final String postContent;
+  final String code;
   final String userId;
   final String postKey;
   final String token;
@@ -31,6 +35,7 @@ class NewsView extends StatefulWidget {
     required this.isLiked,
     required this.isAdmin,
     required this.token,
+    required this.code,
   }) : super(key: key);
 
   @override
@@ -177,12 +182,16 @@ class _NewsViewState extends State<NewsView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Linkify(
-                            text: widget.postContent,
-                            onOpen: (link) => _launchURL(link.url),
-                            // Use a ternary operator to show either a truncated or full text
-                            overflow: isExpanded ? null : TextOverflow.ellipsis,
-                            maxLines: isExpanded ? null : 2,
+                          GestureDetector(
+                            onLongPress: () {
+                              Utils().toastMessages('Copied');
+                              Clipboard.setData(ClipboardData(text: widget.postContent));
+                            },
+                            child: Linkify(
+                              text: widget.postContent,
+                              onOpen: (link) => _launchURL(Uri.parse(link.url)),
+                              maxLines: isExpanded ? null : 2,
+                            ),
                           ),
                           GestureDetector(
                             onTap: () {
@@ -201,6 +210,27 @@ class _NewsViewState extends State<NewsView> {
                         ],
                       ),
                     ),
+                    widget.code != ''
+                        ? ConstrainedBox(
+                            constraints: const BoxConstraints(
+                              minHeight: 0,
+                            ),
+                            child: Container(
+                              padding: EdgeInsets.only(left: width*0.02),
+                              width: width,
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                              child:  SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  child: SelectableText(widget.code,style: GoogleFonts.courierPrime()),
+                                ),
+                              ),
+                            ),
+                          )
+                        : const Gap(0.0001),
+                    Gap(height * 0.01),
                     widget.image != ''
                         ? Image(image: NetworkImage(widget.image))
                         : const Gap(0.0001),
@@ -268,9 +298,9 @@ class _NewsViewState extends State<NewsView> {
     );
   }
 
-  Future<void> _launchURL(dynamic url) async {
+  Future<void> _launchURL(Uri url) async {
     try {
-      (url.toString());
+      await launchUrl(url);
     } catch (e) {
       if (kDebugMode) {
         print("Error launching URL: $e");

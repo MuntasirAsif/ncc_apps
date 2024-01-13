@@ -1,6 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:gap/gap.dart';
 import 'package:ncc_apps/Utils/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AchievementScreen extends StatelessWidget {
   final String image;
@@ -49,7 +52,11 @@ class AchievementScreen extends StatelessWidget {
                  children: [
                    Text(title,style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),),
                    Gap(height*0.01),
-                   Text(postContent,style: textTheme.bodyLarge,textAlign: TextAlign.left,)
+                   Linkify(
+                     text: postContent,style: textTheme.bodyLarge,textAlign: TextAlign.left,
+                     onOpen: (link) =>
+                         _launchURL(Uri.parse(link.url)),
+                   ),
                  ],
                ),
              )
@@ -58,5 +65,14 @@ class AchievementScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+  Future<void> _launchURL(Uri url) async {
+    try {
+      await launchUrl(url);
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error launching URL: $e");
+      }
+    }
   }
 }

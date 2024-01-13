@@ -23,7 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
   bool seePass = true;
-  bool isNewUser=false;
+  bool isNewUser = false;
+  final _formKey = GlobalKey<FormState>();
 
   late GoogleSignInAccount userObj;
   @override
@@ -66,104 +67,119 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: textTheme.headlineLarge!
                             .copyWith(fontWeight: FontWeight.bold)),
                     Gap(height * 0.03),
-                    AutofillGroup(
-                      child: TextFormField(
-                        controller: emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        autofillHints: const [AutofillHints.email],
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.email_outlined),
-                          hintText: 'E-mail',
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: black),
-                              borderRadius: BorderRadius.circular(20)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: black),
-                              borderRadius: BorderRadius.circular(20)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: black),
-                              borderRadius: BorderRadius.circular(20)),
-                          disabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: black),
-                              borderRadius: BorderRadius.circular(20)),
-                        ),
-                      ),
-                    ),
-                    Gap(height * 0.02),
-                    AutofillGroup(
-                      child: TextFormField(
-                        controller: passController,
-                        obscureText: seePass,
-                        autofillHints: const [AutofillHints.password],
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.lock_open),
-                          suffixIcon: InkWell(
-                              onTap: () {
-                                if (seePass) {
-                                  setState(() {
-                                    seePass = false;
-                                  });
-                                } else {
-                                  setState(() {
-                                    seePass = true;
-                                  });
-                                }
-                              },
-                              child: SizedBox(
-                                height: 10,
-                                width: 10,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 15, right: 15),
-                                  child: Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: seePass
-                                          ? const FaIcon(
-                                              FontAwesomeIcons.solidEye,
-                                              size: 18,
-                                            )
-                                          : const FaIcon(
-                                              FontAwesomeIcons.eyeLowVision,
-                                              size: 18,
-                                            )),
+                    Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            AutofillGroup(
+                              child: TextFormField(
+                                controller: emailController,
+                                keyboardType: TextInputType.emailAddress,
+                                autofillHints: const [AutofillHints.email],
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.email_outlined),
+                                  hintText: 'E-mail',
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: black),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: black),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: black),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  disabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: black),
+                                      borderRadius: BorderRadius.circular(20)),
                                 ),
-                              )),
-                          hintText: 'Password',
-                          border: OutlineInputBorder(
-                              borderSide: BorderSide(color: black),
-                              borderRadius: BorderRadius.circular(20)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: black),
-                              borderRadius: BorderRadius.circular(20)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: black),
-                              borderRadius: BorderRadius.circular(20)),
-                          disabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: black),
-                              borderRadius: BorderRadius.circular(20)),
-                        ),
-                      ),
-                    ),
+                              ),
+                            ),
+                            Gap(height * 0.02),
+                            AutofillGroup(
+                              child: TextFormField(
+                                controller: passController,
+                                obscureText: seePass,
+                                autofillHints: const [AutofillHints.password],
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.lock_open),
+                                  suffixIcon: InkWell(
+                                      onTap: () {
+                                        if (seePass) {
+                                          setState(() {
+                                            seePass = false;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            seePass = true;
+                                          });
+                                        }
+                                      },
+                                      child: SizedBox(
+                                        height: 10,
+                                        width: 10,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 15, right: 15),
+                                          child: Align(
+                                              alignment: Alignment.bottomRight,
+                                              child: seePass
+                                                  ? const FaIcon(
+                                                      FontAwesomeIcons.solidEye,
+                                                      size: 18,
+                                                    )
+                                                  : const FaIcon(
+                                                      FontAwesomeIcons
+                                                          .eyeLowVision,
+                                                      size: 18,
+                                                    )),
+                                        ),
+                                      )),
+                                  hintText: 'Password',
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: black),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: black),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: black),
+                                      borderRadius: BorderRadius.circular(20)),
+                                  disabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: black),
+                                      borderRadius: BorderRadius.circular(20)),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )),
                     Gap(height * 0.005),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: width * 0.01),
                       alignment: Alignment.topRight,
                       child: InkWell(
-                        onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const ResetPassword()));
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ResetPassword()));
                         },
                         child: Text(
                           'Forget password? ',
-                          style: textTheme.bodyMedium!.copyWith(color: Colors.deepPurple,fontStyle: FontStyle.italic ,fontWeight: FontWeight.w500),
+                          style: textTheme.bodyMedium!.copyWith(
+                              color: Colors.deepPurple,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
                     ),
                     Gap(height * 0.008),
                     InkWell(
                         onTap: () {
-                          signInWithEmailAndPassword(
-                              emailController.text.toString(),
-                              passController.text.toString());
+                          if (_formKey.currentState!.validate()) {
+                            signInWithEmailAndPassword(
+                                emailController.text.toString(),
+                                passController.text.toString());
+                          }
                         },
                         child: const RoundButton(
                           inputText: 'Log In',
@@ -230,32 +246,35 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Gap(height * 0.02),
                     InkWell(
-                      onTap: () async{
-                        User? user= await signInWithGoogle();
-                        if(user!=null){
+                      onTap: () async {
+                        User? user = await signInWithGoogle();
+                        if (user != null) {
                           await navigate(user);
                         }
                       },
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: width*0.03),
-                        width: width*.8,
-                        height: height*0.06,
+                        padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+                        width: width * .8,
+                        height: height * 0.06,
                         decoration: BoxDecoration(
-                          color: black.withOpacity(0.8),
-                          borderRadius: BorderRadius.circular(50)
-                        ),
+                            color: black.withOpacity(0.8),
+                            borderRadius: BorderRadius.circular(50)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SizedBox(
                                 width: width * 0.1,
-                                height: height*0.04,
+                                height: height * 0.04,
                                 child: const Image(
                                     image: AssetImage(
                                         'assets/images/google_logo.png'))),
-                            Gap(width*0.03),
-                            Text('Continue with Google',style: textTheme.titleMedium!.copyWith(color: white),)
+                            Gap(width * 0.03),
+                            Text(
+                              'Continue with Google',
+                              style:
+                                  textTheme.titleMedium!.copyWith(color: white),
+                            )
                           ],
                         ),
                       ),
@@ -292,16 +311,28 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-  navigate(User user)async{
-    isNewUser? await Navigator.push(context, MaterialPageRoute(builder: (context)=>InfoScreen(email: user.email.toString(), name: user.displayName.toString(), image: user.photoURL.toString()))):await Navigator.push(context, MaterialPageRoute(builder: (context)=> const ConfirmScreen()));
+
+  navigate(User user) async {
+    isNewUser
+        ? await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => InfoScreen(
+                    email: user.email.toString(),
+                    name: user.displayName.toString(),
+                    image: user.photoURL.toString())))
+        : await Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const ConfirmScreen()));
   }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   Future<User?> signInWithGoogle() async {
     // Trigger the authentication flow
     try {
       // Trigger Google Sign-In
-      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
       if (googleSignInAccount == null) {
         // User canceled the sign-in process
         return null;
@@ -309,7 +340,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       // Obtain GoogleSignInAuthentication
       final GoogleSignInAuthentication googleSignInAuthentication =
-      await googleSignInAccount.authentication;
+          await googleSignInAccount.authentication;
 
       // Create AuthCredential using GoogleSignInAuthentication
       final AuthCredential credential = GoogleAuthProvider.credential(
@@ -318,13 +349,14 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       // Sign in to Firebase with AuthCredential
-      final UserCredential authResult = await _auth.signInWithCredential(credential);
+      final UserCredential authResult =
+          await _auth.signInWithCredential(credential);
       final User? user = authResult.user;
 
       // Check if the user is signing in for the first time
       if (authResult.additionalUserInfo!.isNewUser) {
         setState(() {
-          isNewUser=true;
+          isNewUser = true;
         });
       }
 
@@ -334,6 +366,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return null;
     }
   }
+
   signInWithEmailAndPassword(String emailAddress, String password) {
     try {
       FirebaseAuth.instance

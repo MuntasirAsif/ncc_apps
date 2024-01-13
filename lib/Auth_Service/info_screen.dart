@@ -165,10 +165,12 @@ class _InfoScreenState extends State<InfoScreen> {
                   Gap(height * 0.1),
                   InkWell(
                       onTap: () {
-                        if (selectedDept!=""&&_formKey.currentState!.validate()) {
-                          addUserInfo();
-                        }else{
-                          Utils().toastMessages('Please enter your details');
+                        if (_formKey.currentState!.validate()) {
+                          if(selectedDept!=""){
+                            addUserInfo();
+                          }else {
+                            Utils().toastMessages('select Your Department');
+                          }
                         }
                       },
                       child: const RoundButton(

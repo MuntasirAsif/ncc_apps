@@ -16,6 +16,7 @@ class ApplicationView extends StatefulWidget {
 }
 
 class _ApplicationViewState extends State<ApplicationView> {
+  final _formKey = GlobalKey<FormState>();
   TextEditingController positionController = TextEditingController();
   DatabaseReference ref = FirebaseDatabase.instanceFor(
           app: Firebase.app(),
@@ -221,6 +222,36 @@ class _ApplicationViewState extends State<ApplicationView> {
                                                                     TextSpan(
                                                                         text: map?[
                                                                         'dept'],
+                                                                        style: textTheme
+                                                                            .bodySmall)
+                                                                  ])),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    const Gap(5),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .start,
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 250,
+                                                          child: RichText(
+                                                              text: TextSpan(
+                                                                  children: [
+                                                                    TextSpan(
+                                                                        text:
+                                                                        'Apply for: ',
+                                                                        style: textTheme
+                                                                            .bodySmall!
+                                                                            .copyWith(
+                                                                            fontWeight: FontWeight.bold)),
+                                                                    TextSpan(
+                                                                        text: map?[
+                                                                        'segment'],
                                                                         style: textTheme
                                                                             .bodySmall)
                                                                   ])),
@@ -481,31 +512,31 @@ class _ApplicationViewState extends State<ApplicationView> {
           return AlertDialog(
             backgroundColor: white,
             title: const Text('Edit profile'),
-            content: SizedBox(
-              height: height * 0.4,
-              width: width * 0.8,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: positionController,
-                    decoration: InputDecoration(
-                      labelText: 'Position',
-                      hintText: 'Position',
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
-                      disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: black),
-                          borderRadius: BorderRadius.circular(20)),
-                    ),
+            content: ConstrainedBox(
+              constraints: const BoxConstraints(
+                minHeight: 0,
+              ),
+              child: Form(
+                key: _formKey,
+                child: TextFormField(
+                  controller: positionController,
+                  decoration: InputDecoration(
+                    labelText: 'Position',
+                    hintText: 'Position',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: black),
+                        borderRadius: BorderRadius.circular(20)),
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: black),
+                        borderRadius: BorderRadius.circular(20)),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: black),
+                        borderRadius: BorderRadius.circular(20)),
+                    disabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: black),
+                        borderRadius: BorderRadius.circular(20)),
                   ),
-                ],
+                ),
               ),
             ),
             actions: [
@@ -519,7 +550,9 @@ class _ApplicationViewState extends State<ApplicationView> {
                   )),
               InkWell(
                 onTap: () {
-                  updateProfile();
+                  if(positionController.text.toString().length>1){
+                    updateProfile();
+                  }
                 },
                 child: Container(
                   height: height * 0.05,

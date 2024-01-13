@@ -12,6 +12,7 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ncc_apps/Utils/colors.dart';
 import 'package:ncc_apps/Utils/round_button.dart';
+import '../pdf/pdf_generate.dart';
 import '../Utils/utils.dart';
 
 class NCCMemberRequest extends StatefulWidget {
@@ -41,6 +42,7 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
   String gender = 'Select Gender';
   String section = 'Section';
   late bool isEditable;
+  String chooseSegment = '';
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
   TextEditingController ageController = TextEditingController();
@@ -167,6 +169,10 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
                                               BorderRadius.circular(10)),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: red),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
                                     ),
                                   ),
                                   Gap(height * 0.01),
@@ -180,6 +186,13 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                         child: TextFormField(
                                           controller: ageController,
                                           keyboardType: TextInputType.number,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Enter Age';
+                                            } else {
+                                              return null;
+                                            }
+                                          },
                                           decoration: InputDecoration(
                                             hintText: 'Age',
                                             border: OutlineInputBorder(
@@ -202,6 +215,11 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                     BorderSide(color: black),
                                                 borderRadius:
                                                     BorderRadius.circular(10)),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: red),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
                                           ),
                                         ),
                                       ),
@@ -216,7 +234,6 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                             borderRadius:
                                                 BorderRadius.circular(10)),
                                         child: SizedBox(
-                                          width: width * 0.08,
                                           child: PopupMenuButton(
                                             icon: Row(
                                               mainAxisAlignment:
@@ -225,7 +242,7 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 SizedBox(
-                                                  width: width * 0.30,
+                                                  width: width * 0.28,
                                                   child: Text(gender),
                                                 ),
                                                 const Icon(Icons
@@ -286,6 +303,14 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                   Gap(height * 0.01),
                                   TextFormField(
                                     controller: mailController,
+                                    autofillHints: const [AutofillHints.email],
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Enter email';
+                                      } else {
+                                        return null;
+                                      }
+                                    },
                                     decoration: InputDecoration(
                                       hintText: 'E-mail',
                                       border: OutlineInputBorder(
@@ -302,6 +327,10 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                               BorderRadius.circular(10)),
                                       disabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(color: black),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: red),
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                     ),
@@ -323,7 +352,7 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                     bottomLeft:
                                                         Radius.circular(10))),
                                         child:
-                                            const Center(child: Text('+880')),
+                                            const Center(child: Text('+88')),
                                       ),
                                       SizedBox(
                                         height: height * 0.07,
@@ -331,6 +360,16 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                         child: TextFormField(
                                           controller: phoneNumberController,
                                           keyboardType: TextInputType.number,
+                                          autofillHints: const [
+                                            AutofillHints.telephoneNumber
+                                          ],
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Enter Name';
+                                            } else {
+                                              return null;
+                                            }
+                                          },
                                           decoration: InputDecoration(
                                             hintText: 'Number',
                                             border: OutlineInputBorder(
@@ -373,6 +412,11 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                         bottomRight:
                                                             Radius.circular(
                                                                 10))),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: red),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
                                           ),
                                         ),
                                       ),
@@ -402,6 +446,13 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                         width: width * 0.45,
                                         child: TextFormField(
                                           controller: idController,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Enter ID';
+                                            } else {
+                                              return null;
+                                            }
+                                          },
                                           decoration: InputDecoration(
                                             hintText: 'ID',
                                             border: OutlineInputBorder(
@@ -422,6 +473,11 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                             disabledBorder: OutlineInputBorder(
                                                 borderSide:
                                                     BorderSide(color: black),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide:
+                                                    BorderSide(color: red),
                                                 borderRadius:
                                                     BorderRadius.circular(10)),
                                           ),
@@ -595,6 +651,13 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                   Gap(height * 0.01),
                                   TextFormField(
                                     controller: skillController,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Enter Skill';
+                                      } else {
+                                        return null;
+                                      }
+                                    },
                                     decoration: InputDecoration(
                                       hintText: 'Best Skill',
                                       border: OutlineInputBorder(
@@ -613,11 +676,46 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
                                               BorderRadius.circular(10)),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: red),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                  ),
+                                  Gap(height * 0.01),
+                                  InkWell(
+                                    onTap: () {
+                                      showSegmentDialog();
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: width * .03,
+                                          vertical: height * 0.02),
+                                      height: height * 0.07,
+                                      width: width * 0.95,
+                                      decoration: BoxDecoration(
+                                          color: white.withOpacity(0.4),
+                                          border: Border.all(),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: chooseSegment == ''
+                                          ? const Text('Choose Segment')
+                                          : Text(chooseSegment),
                                     ),
                                   ),
                                   Gap(height * 0.01),
                                   TextFormField(
                                     controller: addressController,
+                                    autofillHints: const [
+                                      AutofillHints.addressCityAndState
+                                    ],
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Enter Address';
+                                      } else {
+                                        return null;
+                                      }
+                                    },
                                     decoration: InputDecoration(
                                       hintText: 'Present Address',
                                       border: OutlineInputBorder(
@@ -636,12 +734,26 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
                                               BorderRadius.circular(10)),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: red),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
                                     ),
                                   ),
                                   Gap(height * 0.01),
                                   TextFormField(
                                     maxLines: 3,
                                     controller: noteController,
+                                    keyboardType: TextInputType.text,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'About Your self';
+                                      } else if (value.length < 100) {
+                                        return 'minimum 100 characters';
+                                      } else {
+                                        return null;
+                                      }
+                                    },
                                     inputFormatters: [
                                       LengthLimitingTextInputFormatter(200),
                                     ],
@@ -664,12 +776,26 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
                                               BorderRadius.circular(10)),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: red),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
                                     ),
                                   ),
                                   Gap(height * 0.01),
                                   TextFormField(
                                     maxLines: 3,
                                     controller: goalController,
+                                    keyboardType: TextInputType.text,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Why do you want to join NCC';
+                                      } else if (value.length < 100) {
+                                        return 'minimum 100 characters';
+                                      } else {
+                                        return null;
+                                      }
+                                    },
                                     inputFormatters: [
                                       LengthLimitingTextInputFormatter(200),
                                     ],
@@ -692,6 +818,10 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                           borderSide: BorderSide(color: black),
                                           borderRadius:
                                               BorderRadius.circular(10)),
+                                      errorBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: red),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
                                     ),
                                   ),
                                   Gap(height * 0.01),
@@ -699,7 +829,15 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                               )),
                           InkWell(
                               onTap: () {
-                                addRequestPic(widget.photo);
+                                if (_formKey.currentState!.validate()) {
+                                  if (chooseSegment != "" &&
+                                      widget.dept.toString() != "") {
+                                    addRequestPic(widget.photo);
+                                  } else {
+                                    Utils().toastMessages(
+                                        'Please Select Your Department From profile\nChoose Your Segment');
+                                  }
+                                }
                               },
                               child: const RoundButton(inputText: 'Submit')),
                           Gap(height * 0.01),
@@ -887,6 +1025,35 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                             )
                                                           ],
                                                         ),
+                                                        const Gap(5),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 250,
+                                                              child: RichText(
+                                                                  text: TextSpan(
+                                                                      children: [
+                                                                    TextSpan(
+                                                                        text:
+                                                                            'Apply for: ',
+                                                                        style: textTheme
+                                                                            .bodySmall!
+                                                                            .copyWith(fontWeight: FontWeight.bold)),
+                                                                    TextSpan(
+                                                                        text: map?[
+                                                                            'segment'],
+                                                                        style: textTheme
+                                                                            .bodySmall)
+                                                                  ])),
+                                                            )
+                                                          ],
+                                                        ),
                                                       ],
                                                     ),
                                                     Column(
@@ -986,7 +1153,7 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                                       .bold)),
                                                   TextSpan(
                                                       text:
-                                                          '+880${map?['number']}',
+                                                          '+88${map?['number']}',
                                                       style:
                                                           textTheme.bodySmall)
                                                 ])),
@@ -1141,7 +1308,9 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                   child: const RoundButton(
                                       inputText: 'Edit Application')),
                               InkWell(
-                                  onTap: () {},
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> GeneratePDF(map: map,)));
+                                  },
                                   child: const RoundButton(
                                       inputText: 'Download PDF')),
                             ],
@@ -1196,6 +1365,115 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
     });
   }
 
+  showSegmentDialog() {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Choose your segment'),
+            content: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 0),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                        onTap: () {
+                          setState(() {
+                            chooseSegment = "Competitive Programming";
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: Container(
+                            height: height * 0.05,
+                            width: width,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all()),
+                            child: const Center(
+                                child: Text('Competitive Programming')))),
+                    Gap(height * 0.02),
+                    InkWell(
+                        onTap: () {
+                          setState(() {
+                            chooseSegment = "Cyber Security";
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: Container(
+                            height: height * 0.05,
+                            width: width,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all()),
+                            child:
+                                const Center(child: Text('Cyber Security')))),
+                    Gap(height * 0.02),
+                    InkWell(
+                        onTap: () {
+                          setState(() {
+                            chooseSegment = "App Development";
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: Container(
+                            height: height * 0.05,
+                            width: width,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all()),
+                            child:
+                                const Center(child: Text('App Development')))),
+                    Gap(height * 0.02),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          chooseSegment = "Web Development";
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: Container(
+                          height: height * 0.05,
+                          width: width,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all()),
+                          child: const Center(child: Text('Web Development'))),
+                    ),
+                    Gap(height * 0.02),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          chooseSegment = "Graphic Design";
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: Container(
+                          height: height * 0.05,
+                          width: width,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all()),
+                          child: const Center(child: Text('Graphic Design'))),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Cancel')),
+            ],
+          );
+        });
+  }
+
   addRequestPic(String url) {
     final User? user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
@@ -1210,6 +1488,7 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
       'number': phoneNumberController.text.toString(),
       'id': idController.text.toString(),
       'skill': skillController.text.toString(),
+      'segment': chooseSegment.toString(),
       'address': addressController.text.toString(),
       'about': noteController.text.toString(),
       'reason': goalController.text.toString(),

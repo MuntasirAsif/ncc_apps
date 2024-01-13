@@ -44,21 +44,26 @@ class _MemberRequestState extends State<MemberRequest> {
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context)=>ApplicationView(uid: snapshot.child('uid').value.toString(),)));
                     },
-                    child: Container(
-                      height: height * 0.09,
-                      width: width * 0.95,
-                      decoration: BoxDecoration(
-                          color: grey.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Center(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(snapshot.child('Image').value.toString()),
-                            radius: 30,
-                          ),
-                          title: Text(
-                            snapshot.child('name').value.toString(),
-                            style: textTheme.titleLarge,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth:  width * 0.95,
+                        minHeight:  height * 0.09,
+                      ),
+                      child: Container(
+                        width: width * 0.95,
+                        decoration: BoxDecoration(
+                            color: grey.withOpacity(0.4),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Center(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(snapshot.child('Image').value.toString()),
+                              radius: 30,
+                            ),
+                            title: Text(
+                              snapshot.child('name').value.toString(),
+                              style: textTheme.titleLarge,
+                            ),
                           ),
                         ),
                       ),

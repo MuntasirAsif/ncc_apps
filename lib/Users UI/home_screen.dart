@@ -15,6 +15,9 @@ import 'package:ncc_apps/Utils/colors.dart';
 import 'package:ncc_apps/Utils/utils.dart';
 import 'package:ncc_apps/notifications_services.dart';
 
+import '../Admin UI/member_view.dart';
+import '../Full View/event_view.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -56,6 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
           app: Firebase.app(),
           databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
       .ref("Achievement");
+  DatabaseReference ref2 = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
+      .ref("Event");
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -411,7 +418,105 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                )
+                ),
+                Gap(height * 0.01),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: width*0.03),
+                  child: Column(
+                    children: [
+                      Text('Upcoming Event',style: textTheme.titleLarge!.copyWith(fontWeight: FontWeight.bold),),
+                      Gap(width*0.02),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const EventScreen( isAdmin: false)));
+                        },
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                              minHeight: height * 0.09
+                          ),
+                          child: Container(
+                            width: width * 0.95,
+                            decoration: BoxDecoration(
+                                color: grey.withOpacity(0.4),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: StreamBuilder(
+                              stream: ref2.child('Event').onValue,
+                              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else if (snapshot.hasData) {
+                                  final DataSnapshot data = snapshot.data!.snapshot;
+                                  final Map<dynamic, dynamic>? map =
+                                  data.value as Map<dynamic, dynamic>?;
+                                  return Center(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: height*0.2,
+                                          width: width*0.4,
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(map?['image']),fit: BoxFit.cover
+                                              ),
+                                              borderRadius: const BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20))
+                                          ),),
+                                        Gap(width*0.02),
+                                        Column(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children:[
+                                              Text(
+                                                map?['title'],
+                                                style: textTheme.titleLarge,
+                                              ),
+                                              SizedBox(
+                                                  width: width*0.5,
+                                                  height: height*0.15,
+                                                  child: Text(map?['details'])),
+                                            ]
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return const Text('Something Wrong');
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Gap(height * 0.01),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> const Member(isAdmin: false,)));
+                        },
+                        child: Container(
+                          height: height * 0.09,
+                          width: width * 0.95,
+                          decoration: BoxDecoration(
+                              color: grey.withOpacity(0.4),
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Center(
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: white,
+                                backgroundImage: const AssetImage('assets/images/logo.png'),
+                                radius: 30,
+                              ),
+                              title: Text(
+                                'NCC Members',
+                                style: textTheme.titleLarge,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

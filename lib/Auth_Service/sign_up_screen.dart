@@ -115,7 +115,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               },
                               decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.confirmation_num),
-                                helperText: 'If you are Teacher then enter -"0"',
+                                helperText:
+                                    'If you are Teacher then enter -"0"',
                                 hintText: 'Batch No',
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide(color: black),
@@ -308,13 +309,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Gap(height * 0.02),
                   InkWell(
                       onTap: () {
-                        if (_formKey.currentState!.validate() &&
-                            selectedDept != "" &&
-                            isAgree == true) {
-                          createUserWithEmailAndPassword(
-                              emailController.text.toString(),
-                              passController.text.toString());
-                          TextInput.finishAutofillContext();
+                        if (_formKey.currentState!.validate()) {
+                          if (selectedDept != "" && isAgree == true) {
+                            createUserWithEmailAndPassword(
+                                emailController.text.toString(),
+                                passController.text.toString());
+                            TextInput.finishAutofillContext();
+                          }
                         }
                       },
                       child: const RoundButton(
@@ -407,13 +408,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     ref.child(uid!).set({
       'profileImage': '',
       'userType': 'User',
-      'uid' : uid,
+      'uid': uid,
       'userName': nameController.text.toString(),
       'email': emailController.text.toString(),
       'batch': batchController.text.toString(),
       'department': selectedDept.toString(),
-      'id' : '',
-      'position' : '',
+      'id': '',
+      'position': '',
     }).then((value) {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const ConfirmScreen()));

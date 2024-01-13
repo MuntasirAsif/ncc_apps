@@ -77,6 +77,7 @@ class _NewsFeedState extends State<NewsFeed> {
                         isLiked: snapshot.child('like').child(uid!).exists,
                         isAdmin: widget.isAdmin,
                         token: snapshot.child('token').value.toString(),
+                        code: snapshot.child('code').value.toString(),
                       );
                     }),
               ),

@@ -1,12 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:ncc_apps/Admin%20UI/member_request.dart';
 import 'package:ncc_apps/Admin%20UI/member_view.dart';
+import 'package:ncc_apps/Full%20View/event_view.dart';
 import 'package:ncc_apps/Full%20View/notification_screen.dart';
 import 'package:ncc_apps/Users%20UI/post_screen.dart';
 import '../Users UI/Cards/achievement_view.dart';
@@ -26,11 +29,19 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
       app: Firebase.app(),
       databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
       .ref("Achievement");
+  DatabaseReference ref2 = FirebaseDatabase.instanceFor(
+      app: Firebase.app(),
+      databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
+      .ref("Event");
+  bool haveNotifications = false;
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final textTheme = Theme.of(context).textTheme;
+    final User? user = FirebaseAuth.instance.currentUser;
+    final uid = user?.uid;
+    checkDataExistence(uid.toString());
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -54,12 +65,23 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
           Gap(width * .05),
           InkWell(
             onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const NotificationScreen(isAdmin: true,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const NotificationScreen(isAdmin: true,)));
             },
-            child: Icon(
-              Icons.notifications,
-              size: 30,
-              color: black,
+            child:  Stack(
+              children: [
+                Icon(
+                  Icons.notifications,
+                  size: 30,
+                  color: black,
+                ),
+                Positioned(
+                  right: 0,
+                  child: haveNotifications ?const Badge(
+                    backgroundColor: Colors.red,
+                    smallSize: 10,
+                  ):const SizedBox(),
+                ),
+              ],
             ),
           ),
           Gap(width * .05),
@@ -141,6 +163,69 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     children: [
                       InkWell(
                         onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const EventScreen( isAdmin: true)));
+                        },
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: height * 0.09
+                          ),
+                          child: Container(
+                            width: width * 0.95,
+                            decoration: BoxDecoration(
+                                color: grey.withOpacity(0.4),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: StreamBuilder(
+                              stream: ref2.child('Event').onValue,
+                              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                                if (!snapshot.hasData) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else if (snapshot.hasData) {
+                                  final DataSnapshot data = snapshot.data!.snapshot;
+                                  final Map<dynamic, dynamic>? map =
+                                  data.value as Map<dynamic, dynamic>?;
+                                  return Center(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                            height: height*0.2,
+                                            width: width*0.4,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: NetworkImage(map?['image']),fit: BoxFit.cover
+                                              ),
+                                              borderRadius: const BorderRadius.only(topLeft: Radius.circular(20),bottomLeft: Radius.circular(20))
+                                            ),),
+                                        Gap(width*0.02),
+                                        Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children:[
+                                          Text(
+                                            map?['title'],
+                                            style: textTheme.titleLarge,
+                                          ),
+                                          SizedBox(
+                                              width: width*0.5,
+                                            height: height*0.15,
+                                              child: Text(map?['details'])),
+                                    ]
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return const Text('Something Wrong');
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      Gap(height * 0.01),
+                      InkWell(
+                        onTap: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context)=>const MemberRequest()));
                         },
                         child: Container(
@@ -167,7 +252,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       Gap(height * 0.01),
                       InkWell(
                         onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Member()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const Member(isAdmin: true,)));
                         },
                         child: Container(
                           height: height * 0.09,
@@ -224,5 +309,38 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
         ),
       ),
     );
+  }
+  Future<void> checkDataExistence(String uid) async {
+    DatabaseReference reference = FirebaseDatabase.instanceFor(
+        app: Firebase.app(),
+        databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
+        .ref("user/$uid/notifications");
+
+    try {
+      DataSnapshot dataSnapshot = await reference.get();
+
+      if (dataSnapshot.value != null) {
+        setState(() {
+          haveNotifications=true;
+        });
+        // Data exists
+        if (kDebugMode) {
+          print("Data exists: ${dataSnapshot.value}");
+        }
+      } else {
+        setState(() {
+          haveNotifications=false;
+        });
+        // Data doesn't exist
+        if (kDebugMode) {
+          print("Data doesn't exist");
+        }
+      }
+    } catch (error) {
+      // Handle any potential errors
+      if (kDebugMode) {
+        print("Error: $error");
+      }
+    }
   }
 }

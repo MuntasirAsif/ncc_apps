@@ -8,7 +8,8 @@ import 'package:ncc_apps/Users%20UI/profile_screen.dart';
 import '../Utils/colors.dart';
 
 class Member extends StatefulWidget {
-  const Member({Key? key}) : super(key: key);
+  final bool isAdmin;
+  const Member({Key? key, required this.isAdmin}) : super(key: key);
 
   @override
   State<Member> createState() => _MemberState();
@@ -42,27 +43,32 @@ class _MemberState extends State<Member> {
                 children: [
                   InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileScreen(isAdmin: true, uid: snapshot.child('uid').value.toString())));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfileScreen(isAdmin: widget.isAdmin, uid: snapshot.child('uid').value.toString())));
                     },
-                    child: Container(
-                      height: height * 0.09,
-                      width: width * 0.95,
-                      decoration: BoxDecoration(
-                          color: grey.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Center(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(snapshot.child('profileImage').value.toString()),
-                            radius: 30,
-                          ),
-                          title: Text(
-                            snapshot.child('userName').value.toString(),
-                            style: textTheme.titleLarge,
-                          ),
-                          subtitle: Text(
-                            snapshot.child('position').value.toString(),
-                            style: textTheme.bodySmall,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: height * 0.09,
+                        minWidth: width * 0.95
+                      ),
+                      child: Container(
+                        width: width * 0.95,
+                        decoration: BoxDecoration(
+                            color: grey.withOpacity(0.4),
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Center(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(snapshot.child('profileImage').value.toString()),
+                              radius: 30,
+                            ),
+                            title: Text(
+                              snapshot.child('userName').value.toString(),
+                              style: textTheme.titleLarge,
+                            ),
+                            subtitle: Text(
+                              snapshot.child('position').value.toString(),
+                              style: textTheme.bodySmall,
+                            ),
                           ),
                         ),
                       ),
