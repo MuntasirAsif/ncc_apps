@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable
 
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -18,7 +17,6 @@ import '../Utils/utils.dart';
 class NCCMemberRequest extends StatefulWidget {
   String name;
   final String dept;
-  String id;
   String position;
   String photo;
   NCCMemberRequest(
@@ -26,7 +24,6 @@ class NCCMemberRequest extends StatefulWidget {
       required this.photo,
       required this.name,
       required this.dept,
-      required this.id,
       required this.position})
       : super(key: key);
 
@@ -61,7 +58,6 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
   @override
   Widget build(BuildContext context) {
     nameController.text = widget.name;
-    idController.text = widget.id;
     final User? user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
     final height = MediaQuery.of(context).size.height;
@@ -441,48 +437,6 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      SizedBox(
-                                        height: height * 0.07,
-                                        width: width * 0.45,
-                                        child: TextFormField(
-                                          controller: idController,
-                                          validator: (value) {
-                                            if (value!.isEmpty) {
-                                              return 'Enter ID';
-                                            } else {
-                                              return null;
-                                            }
-                                          },
-                                          decoration: InputDecoration(
-                                            hintText: 'ID',
-                                            border: OutlineInputBorder(
-                                                borderSide:
-                                                    BorderSide(color: black),
-                                                borderRadius:
-                                                    BorderRadius.circular(20)),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderSide:
-                                                    BorderSide(color: black),
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            enabledBorder: OutlineInputBorder(
-                                                borderSide:
-                                                    BorderSide(color: black),
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            disabledBorder: OutlineInputBorder(
-                                                borderSide:
-                                                    BorderSide(color: black),
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            errorBorder: OutlineInputBorder(
-                                                borderSide:
-                                                    BorderSide(color: red),
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                          ),
-                                        ),
-                                      ),
                                       Container(
                                         padding: EdgeInsets.symmetric(
                                           horizontal: width * .03,
@@ -643,6 +597,48 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                                 ),
                                               ),
                                             ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: height * 0.07,
+                                        width: width * 0.45,
+                                        child: TextFormField(
+                                          controller: idController,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Enter ID';
+                                            } else {
+                                              return null;
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                            hintText: 'ID',
+                                            border: OutlineInputBorder(
+                                                borderSide:
+                                                BorderSide(color: black),
+                                                borderRadius:
+                                                BorderRadius.circular(20)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderSide:
+                                                BorderSide(color: black),
+                                                borderRadius:
+                                                BorderRadius.circular(10)),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderSide:
+                                                BorderSide(color: black),
+                                                borderRadius:
+                                                BorderRadius.circular(10)),
+                                            disabledBorder: OutlineInputBorder(
+                                                borderSide:
+                                                BorderSide(color: black),
+                                                borderRadius:
+                                                BorderRadius.circular(10)),
+                                            errorBorder: OutlineInputBorder(
+                                                borderSide:
+                                                BorderSide(color: red),
+                                                borderRadius:
+                                                BorderRadius.circular(10)),
                                           ),
                                         ),
                                       ),
@@ -834,8 +830,13 @@ class _NCCMemberRequestState extends State<NCCMemberRequest> {
                                       widget.dept.toString() != "") {
                                     addRequestPic(widget.photo);
                                   } else {
-                                    Utils().toastMessages(
-                                        'Please Select Your Department From profile\nChoose Your Segment');
+                                    if(chooseSegment != ""){
+                                      Utils().toastMessages(
+                                          'Please Select Your Department From profile');
+                                    }else{
+                                      Utils().toastMessages(
+                                          'Choose Your Segment');
+                                    }
                                   }
                                 }
                               },

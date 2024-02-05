@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,8 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ncc_apps/Admin%20UI/event_registration_list.dart';
+import 'package:ncc_apps/Users%20UI/event_registration.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../Utils/colors.dart';
@@ -16,10 +18,7 @@ import '../Utils/utils.dart';
 
 class EventScreen extends StatefulWidget {
   final bool isAdmin;
-  const EventScreen(
-      {Key? key,
-      required this.isAdmin})
-      : super(key: key);
+  const EventScreen({Key? key, required this.isAdmin}) : super(key: key);
 
   @override
   State<EventScreen> createState() => _EventScreenState();
@@ -27,6 +26,8 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
   String photo = '';
+  bool isOpenRegistration = false;
+  bool canRegistration = false;
   late String url;
   File? image;
   final picker = ImagePicker();
@@ -51,6 +52,9 @@ class _EventScreenState extends State<EventScreen> {
           widget.isAdmin
               ? InkWell(
                   onTap: () {
+                    setState(() {
+                      isOpenRegistration=canRegistration;
+                    });
                     setState(() {
                       if (isEditable) {
                         isEditable = false;
@@ -104,6 +108,7 @@ class _EventScreenState extends State<EventScreen> {
                     data.value as Map<dynamic, dynamic>?;
                 detailsController.text = map?['details'];
                 titleController.text = map?['title'];
+                canRegistration = map?['regStatus']=='open'?true:false;
                 return Container(
                   alignment: Alignment.topLeft,
                   padding: EdgeInsets.symmetric(horizontal: width * 0.03),
@@ -125,7 +130,7 @@ class _EventScreenState extends State<EventScreen> {
                                   right: 10,
                                   bottom: 10,
                                   child: InkWell(
-                                    onTap: (){
+                                    onTap: () {
                                       getImageGallery();
                                     },
                                     child: Container(
@@ -136,7 +141,8 @@ class _EventScreenState extends State<EventScreen> {
                                           borderRadius:
                                               BorderRadius.circular(50)),
                                       child: Icon(
-                                        Icons.camera_alt,color: white,
+                                        Icons.camera_alt,
+                                        color: white,
                                         size: 40,
                                       ),
                                     ),
@@ -144,6 +150,62 @@ class _EventScreenState extends State<EventScreen> {
                               : const SizedBox(),
                         ],
                       ),
+                      Gap(height * 0.02),
+                      isEditable?InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (isOpenRegistration == true) {
+                              setState(() {
+                                isOpenRegistration = false;
+                              });
+                              ref.child('Event').update({
+                                'regStatus':'close',
+                              }).then((value) {
+                                Utils().toastMessages('closed');
+                              }).onError((error, stackTrace) {
+                                Utils().toastMessages(error.toString());
+                              });
+                            } else {
+                              setState(() {
+                                isOpenRegistration = true;
+                              });
+                              ref.child('Event').update({
+                                'regStatus':'open',
+                              }).then((value) {
+                                Utils().toastMessages('Open');
+                              }).onError((error, stackTrace) {
+                                Utils().toastMessages(error.toString());
+                              });
+                            }
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                                height: height * 0.02,
+                                width: width * 0.04,
+                                decoration: BoxDecoration(
+                                    borderRadius:
+                                    BorderRadius.circular(100),
+                                    border: Border.all()),
+                                child: Center(
+                                  child: Container(
+                                    height: height * 0.01,
+                                    width: width * 0.02,
+                                    decoration: BoxDecoration(
+                                      color: isOpenRegistration
+                                          ? deepGreen
+                                          : transparent,
+                                      borderRadius:
+                                      BorderRadius.circular(100),
+                                    ),
+                                  ),
+                                )),
+                            Gap(width * .02),
+                            const Text('Registration Open'),
+                          ],
+                        ),
+                      ):const SizedBox(),
                       Gap(height * 0.02),
                       SizedBox(
                           child: isEditable
@@ -202,17 +264,17 @@ class _EventScreenState extends State<EventScreen> {
                               ),
                             )
                           : GestureDetector(
-                        onLongPress: () {
-                          Utils().toastMessages('Copied');
-                          Clipboard.setData(
-                              ClipboardData(text: map?['details']));
-                        },
-                        child: Linkify(
-                          text: map?['details'],
-                          onOpen: (link) =>
-                              _launchURL(Uri.parse(link.url)),
-                        ),
-                      )
+                              onLongPress: () {
+                                Utils().toastMessages('Copied');
+                                Clipboard.setData(
+                                    ClipboardData(text: map?['details']));
+                              },
+                              child: Linkify(
+                                text: map?['details'],
+                                onOpen: (link) =>
+                                    _launchURL(Uri.parse(link.url)),
+                              ),
+                            )
                     ],
                   ),
                 );
@@ -223,8 +285,43 @@ class _EventScreenState extends State<EventScreen> {
           ),
         ),
       ),
+      floatingActionButton:InkWell(
+        onTap: () {
+          widget.isAdmin? Navigator.push(context, MaterialPageRoute(builder: (context)=>const EventRegistrationListScreen())):
+          canRegistration ? Navigator.push(context, MaterialPageRoute(builder: (context)=>const EventRegistration())):
+          Utils().toastMessages('Registration is closed at this time');
+        },
+        child: widget.isAdmin?Container(
+          height: height * 0.05,
+          width: width * 0.35,
+          decoration: BoxDecoration(
+              color: bgGreen.withOpacity(0.7),
+              border: Border.all(),
+              borderRadius: BorderRadius.circular(10)),
+          child: Center(child: Text('Registration list',style: textTheme.titleMedium,)),
+        ):Container(
+          height: height * 0.05,
+          width: width * 0.35,
+          decoration: BoxDecoration(
+              color: bgGreen.withOpacity(0.7),
+              border: Border.all(),
+              borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FaIcon(
+                FontAwesomeIcons.notesMedical,
+                color: black,
+              ),
+              Gap(width * 0.02),
+              Text('Register now',style: textTheme.titleMedium,)
+            ],
+          ),
+        ),
+      ),
     );
   }
+
   Future<void> _launchURL(Uri url) async {
     try {
       await launchUrl(url);
@@ -248,6 +345,7 @@ class _EventScreenState extends State<EventScreen> {
       Utils().toastMessages(error.toString());
     });
   }
+
   addPost(String url) {
     ref.child('Event').update({
       'image': url,
@@ -257,6 +355,7 @@ class _EventScreenState extends State<EventScreen> {
       Utils().toastMessages(error.toString());
     });
   }
+
   Future getImageGallery() async {
     final pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
@@ -271,9 +370,10 @@ class _EventScreenState extends State<EventScreen> {
       }
     });
   }
+
   uploadPic(File image) async {
     FirebaseStorage storage =
-    FirebaseStorage.instanceFor(bucket: 'gs://ncc-apps-47109.appspot.com');
+        FirebaseStorage.instanceFor(bucket: 'gs://ncc-apps-47109.appspot.com');
     Reference storageRef = storage.ref().child("event");
     UploadTask uploadTask = storageRef.putFile(image);
     Future.value(uploadTask).then((value) async {

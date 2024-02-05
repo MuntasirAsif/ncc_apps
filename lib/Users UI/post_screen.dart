@@ -343,7 +343,7 @@ class _PostScreenState extends State<PostScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const Text('Please Enter the Rank'),
+                                      const Text('Enter the Rank'),
                                       Gap(width * .02),
                                       SizedBox(
                                         width: width * 0.2,

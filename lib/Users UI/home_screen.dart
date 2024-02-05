@@ -14,7 +14,6 @@ import 'package:ncc_apps/Users%20UI/Cards/achievement_view.dart';
 import 'package:ncc_apps/Utils/colors.dart';
 import 'package:ncc_apps/Utils/utils.dart';
 import 'package:ncc_apps/notifications_services.dart';
-
 import '../Admin UI/member_view.dart';
 import '../Full View/event_view.dart';
 
@@ -45,8 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
     notificationServices.firebaseInit(context);
 
     notificationServices.setInteractMessage(context);
-
-    //notificationServices.isTokenRefresh();
 
     notificationServices.getDeviceToken().then((value) {
       if (kDebugMode) {
@@ -488,6 +485,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
+
                       Gap(height * 0.01),
                       InkWell(
                         onTap: () {

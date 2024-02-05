@@ -24,6 +24,7 @@ class _InfoScreenState extends State<InfoScreen> {
   final batchController = TextEditingController();
   var selectedDept = "";
   String email ="";
+  int k =0;
   DatabaseReference ref = FirebaseDatabase.instanceFor(
       app: Firebase.app(),
       databaseURL: 'https://ncc-apps-47109-default-rtdb.firebaseio.com')
@@ -32,7 +33,9 @@ class _InfoScreenState extends State<InfoScreen> {
   Widget build(BuildContext context) {
     nameController.text=widget.name;
     email=widget.email;
-    backUserInfo();
+    if(k==0){
+      backUserInfo();
+    }
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final textTheme = Theme.of(context).textTheme;
@@ -208,6 +211,7 @@ class _InfoScreenState extends State<InfoScreen> {
     );
   }
   Future<void> backUserInfo() async {
+    k++;
     final User? user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid;
     ref.child(uid!).set({
@@ -238,6 +242,7 @@ class _InfoScreenState extends State<InfoScreen> {
       'id' : '',
       'position' : '',
     }).then((value) {
+      Utils().toastMessages('Your Information is Updated');
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => const ConfirmScreen()));
     }).onError((error, stackTrace) {

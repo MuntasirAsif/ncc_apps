@@ -227,7 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Column(
                           children: [
                             Text(
-                              'or',
+                              'Welcome to NCC',
                               style: textTheme.bodySmall,
                             ),
                           ],
@@ -245,40 +245,40 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     Gap(height * 0.02),
-                    InkWell(
-                      onTap: () async {
-                        User? user = await signInWithGoogle();
-                        if (user != null) {
-                          await navigate(user);
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: width * 0.03),
-                        width: width * .8,
-                        height: height * 0.06,
-                        decoration: BoxDecoration(
-                            color: black.withOpacity(0.8),
-                            borderRadius: BorderRadius.circular(50)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                                width: width * 0.1,
-                                height: height * 0.04,
-                                child: const Image(
-                                    image: AssetImage(
-                                        'assets/images/google_logo.png'))),
-                            Gap(width * 0.03),
-                            Text(
-                              'Continue with Google',
-                              style:
-                                  textTheme.titleMedium!.copyWith(color: white),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
+                    // InkWell(
+                    //   onTap: () async {
+                    //     User? user = await signInWithGoogle();
+                    //     if (user != null) {
+                    //       await navigate(user);
+                    //     }
+                    //   },
+                    //   child: Container(
+                    //     padding: EdgeInsets.symmetric(horizontal: width * 0.03),
+                    //     width: width * .8,
+                    //     height: height * 0.06,
+                    //     decoration: BoxDecoration(
+                    //         color: black.withOpacity(0.8),
+                    //         borderRadius: BorderRadius.circular(50)),
+                    //     child: Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       crossAxisAlignment: CrossAxisAlignment.center,
+                    //       children: [
+                    //         SizedBox(
+                    //             width: width * 0.1,
+                    //             height: height * 0.04,
+                    //             child: const Image(
+                    //                 image: AssetImage(
+                    //                     'assets/images/google_logo.png'))),
+                    //         Gap(width * 0.03),
+                    //         Text(
+                    //           'Continue with Google',
+                    //           style:
+                    //               textTheme.titleMedium!.copyWith(color: white),
+                    //         )
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                     Gap(height * 0.05),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -359,7 +359,6 @@ class _LoginScreenState extends State<LoginScreen> {
           isNewUser = true;
         });
       }
-
       return user;
     } catch (error) {
       Utils().toastMessages('Error signing in with Google: $error');

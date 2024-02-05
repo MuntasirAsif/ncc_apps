@@ -76,7 +76,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             photo: photo,
                                             name: nameController.text,
                                             dept: departmentController.text,
-                                            id: idController.text,
                                             position: positionController.text,
                                           )));
                         },
